@@ -3,523 +3,635 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Pharo Hotel — Seaside Stays</title>
-  <meta name="description" content="Pharo Hotel: sea-view rooms, a terrace restaurant and sunsets by the lighthouse. (Test build with placeholder content.)">
-  <!-- Test build: keep search engines out until real content is in. Remove before launch. -->
+  <title>The Pharo — Luxury Hotel in Nittambuwa, Sri Lanka</title>
+  <meta name="description" content="The Pharo, Nittambuwa: a modern palace on the Colombo–Kandy road with a rooftop pool, sky lounge, two restaurants, a bar, a café and two 350-guest ballrooms.">
+  <!-- Test build: keep search engines out until launch. Remove this line to go public. -->
   <meta name="robots" content="noindex, nofollow">
-  <meta name="theme-color" content="#0f2a3d">
+  <meta name="theme-color" content="#0b0a08">
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600&display=swap">
+
+  <link rel="preconnect" href="https://images.unsplash.com">
+  <link rel="preload" href="assets/fonts/cinzel-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/manrope-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/pharo-glyphs.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="assets/css/style.css">
+
   <script>document.documentElement.classList.add('js');</script>
+  <script src="assets/vendor/gsap/gsap.min.js" defer></script>
+  <script src="assets/vendor/gsap/ScrollTrigger.min.js" defer></script>
+  <script src="assets/vendor/gsap/ScrollSmoother.min.js" defer></script>
+  <script src="assets/vendor/gsap/ScrollToPlugin.min.js" defer></script>
+  <script src="assets/vendor/gsap/SplitText.min.js" defer></script>
+  <script src="assets/vendor/gsap/DrawSVGPlugin.min.js" defer></script>
   <script src="assets/js/main.js" defer></script>
 </head>
 <body>
+  <!-- Reusable SVG symbols -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <!-- Winged sun disk: the royal emblem above every temple door -->
+      <symbol id="winged-sun" viewBox="0 0 240 64">
+        <g class="ws-wing" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+          <path d="M106 24C80 12 40 10 4 18"/>
+          <path d="M106 28C80 20 45 20 12 26"/>
+          <path d="M106 32C82 27 52 28 24 34"/>
+          <path d="M106 36C85 33 62 35 40 41"/>
+          <path d="M106 40C88 39 72 42 58 47"/>
+        </g>
+        <g class="ws-wing" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" transform="translate(240 0) scale(-1 1)">
+          <path d="M106 24C80 12 40 10 4 18"/>
+          <path d="M106 28C80 20 45 20 12 26"/>
+          <path d="M106 32C82 27 52 28 24 34"/>
+          <path d="M106 36C85 33 62 35 40 41"/>
+          <path d="M106 40C88 39 72 42 58 47"/>
+        </g>
+        <circle class="ws-disk" cx="120" cy="30" r="11" fill="currentColor"/>
+        <path class="ws-uraeus" d="M110 44c-2-4 0-7 3-8M130 44c2-4 0-7-3-8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </symbol>
+
+      <!-- Logo mark: pyramid under a rising sun -->
+      <symbol id="mark" viewBox="0 0 48 48">
+        <circle cx="24" cy="12" r="5" fill="currentColor"/>
+        <path d="M24 17 43 42H5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M24 17 29 42" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M12 33h24" fill="none" stroke="currentColor" stroke-width="1"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <!-- ================= Temple gate preloader ================= -->
+  <div class="gate" aria-hidden="true">
+    <div class="gate-door gate-door--l">
+      <div class="door-frame">
+        <div class="door-glyphs">
+          <span>𓇳</span><span>𓅃</span><span>𓋹</span><span>𓆣</span><span>𓊽</span><span>𓂀</span><span>𓆸</span>
+        </div>
+        <span class="door-ring"></span>
+      </div>
+    </div>
+    <div class="gate-door gate-door--r">
+      <div class="door-frame">
+        <div class="door-glyphs">
+          <span>𓆸</span><span>𓂀</span><span>𓊽</span><span>𓆣</span><span>𓋹</span><span>𓅃</span><span>𓇳</span>
+        </div>
+        <span class="door-ring"></span>
+      </div>
+    </div>
+    <div class="gate-center">
+      <svg class="gate-sun"><use href="#winged-sun"/></svg>
+      <p class="gate-brand">The Pharo</p>
+      <p class="gate-count"><span id="gate-count">0</span></p>
+    </div>
+  </div>
+
+  <!-- Cursor + scroll progress (desktop enhancements) -->
+  <div class="cursor" aria-hidden="true"><span class="cursor-dot"></span><span class="cursor-ring"><em class="cursor-label"></em></span></div>
+  <div class="progress" aria-hidden="true"><span></span></div>
+
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- ============ Header ============ -->
+  <!-- ================= Header ================= -->
   <header class="site-header">
-    <div class="container nav">
-      <a class="brand" href="#top" aria-label="Pharo Hotel, back to top">
-        <svg viewBox="0 0 32 32" aria-hidden="true">
-          <path d="M13.5 7 3 4v6z M18.5 7 29 4v6z" fill="#f2b56b" opacity=".55"/>
-          <path d="M12.5 5 16 2l3.5 3z" fill="currentColor"/>
-          <rect x="13.5" y="5" width="5" height="4" fill="#f2b56b"/>
-          <rect x="12" y="9" width="8" height="2" rx=".5" fill="currentColor"/>
-          <path d="M13 11h6l1.5 17h-9z" fill="currentColor"/>
-          <path d="M12.47 17h7.06l.26 3h-7.58z" fill="#f2b56b"/>
-          <path d="M6 29h20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
-        <span class="brand-name">Pharo<small>Hotel</small></span>
+    <div class="header-inner">
+      <a class="brand" href="#top" aria-label="The Pharo, back to top">
+        <svg class="brand-mark" aria-hidden="true"><use href="#mark"/></svg>
+        <span class="brand-text">The Pharo<small>Nittambuwa</small></span>
       </a>
-
-      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-menu" aria-label="Open menu">
-        <span class="nav-toggle-bar"></span>
-      </button>
-
-      <nav id="nav-menu" class="nav-menu" aria-label="Main">
-        <a href="#about">About</a>
-        <a href="#rooms">Rooms</a>
-        <a href="#amenities">Amenities</a>
-        <a href="#dining">Dining</a>
-        <a href="#gallery">Gallery</a>
+      <nav class="nav" aria-label="Main">
+        <a href="#kingdom">Kingdom</a>
+        <a href="#chambers">Chambers</a>
+        <a href="#oasis">Rooftop</a>
+        <a href="#feasts">Dining</a>
+        <a href="#celebrations">Events</a>
         <a href="#contact">Contact</a>
-        <a class="btn btn-small" href="#book">Book now</a>
       </nav>
+      <div class="header-actions">
+        <a class="header-phone" href="tel:+94706696663">+94 70 669 6663</a>
+        <a class="btn btn-gold btn-sm magnetic" href="#reserve"><span>Reserve</span></a>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu" aria-label="Open menu">
+          <span></span><span></span>
+        </button>
+      </div>
     </div>
   </header>
 
-  <main id="main">
-    <!-- ============ Hero ============ -->
-    <section class="hero" id="top">
-      <svg class="hero-art" viewBox="0 0 1600 900" preserveAspectRatio="xMaxYMid slice" aria-hidden="true" focusable="false">
-        <defs>
-          <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#0c2233"/>
-            <stop offset=".3" stop-color="#1e4460"/>
-            <stop offset=".56" stop-color="#6b6a86"/>
-            <stop offset=".8" stop-color="#d98b62"/>
-            <stop offset=".93" stop-color="#f5b673"/>
-            <stop offset="1" stop-color="#fbd08e"/>
-          </linearGradient>
-          <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#2d5872"/>
-            <stop offset="1" stop-color="#0b1f2e"/>
-          </linearGradient>
-          <radialGradient id="sun-glow">
-            <stop offset="0" stop-color="#ffe2b0" stop-opacity=".9"/>
-            <stop offset=".35" stop-color="#ffc47e" stop-opacity=".35"/>
-            <stop offset="1" stop-color="#ffc47e" stop-opacity="0"/>
-          </radialGradient>
-          <linearGradient id="beam-left" x1="1" y1="0" x2="0" y2="0">
-            <stop offset="0" stop-color="#fff1c9" stop-opacity=".7"/>
-            <stop offset="1" stop-color="#fff1c9" stop-opacity="0"/>
-          </linearGradient>
-          <linearGradient id="beam-right" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stop-color="#fff1c9" stop-opacity=".45"/>
-            <stop offset="1" stop-color="#fff1c9" stop-opacity="0"/>
-          </linearGradient>
-        </defs>
-
-        <!-- sky & stars -->
-        <rect width="1600" height="600" fill="url(#sky)"/>
-        <g fill="#fff">
-          <circle cx="120" cy="60" r="1.6" opacity=".7"/><circle cx="260" cy="120" r="1.2" opacity=".5"/>
-          <circle cx="420" cy="40" r="1.8" opacity=".8"/><circle cx="560" cy="150" r="1.2" opacity=".4"/>
-          <circle cx="700" cy="80" r="1.5" opacity=".6"/><circle cx="840" cy="30" r="1.2" opacity=".6"/>
-          <circle cx="980" cy="110" r="1.6" opacity=".5"/><circle cx="1120" cy="50" r="1.3" opacity=".7"/>
-          <circle cx="1260" cy="140" r="1.2" opacity=".4"/><circle cx="1400" cy="70" r="1.7" opacity=".7"/>
-          <circle cx="1520" cy="120" r="1.2" opacity=".5"/><circle cx="330" cy="210" r="1.1" opacity=".35"/>
-          <circle cx="1480" cy="220" r="1.1" opacity=".35"/><circle cx="1200" cy="230" r="1" opacity=".3"/>
-        </g>
-
-        <!-- sun -->
-        <circle cx="1060" cy="585" r="260" fill="url(#sun-glow)"/>
-        <circle cx="1060" cy="585" r="58" fill="#ffe0a8"/>
-
-        <!-- distant coast -->
-        <path d="M0 588C80 570 150 560 230 566c70 5 130 14 210 22z" fill="#5b4a60" opacity=".5"/>
-
-        <!-- sea -->
-        <rect y="585" width="1600" height="315" fill="url(#sea)"/>
-        <g fill="#ffd59a">
-          <rect x="1000" y="596" width="120" height="3" rx="1.5" opacity=".7"/>
-          <rect x="1015" y="608" width="90" height="3" rx="1.5" opacity=".6"/>
-          <rect x="990" y="622" width="140" height="3" rx="1.5" opacity=".5"/>
-          <rect x="1025" y="638" width="70" height="3" rx="1.5" opacity=".45"/>
-          <rect x="1005" y="656" width="110" height="3" rx="1.5" opacity=".35"/>
-          <rect x="1030" y="678" width="60" height="3" rx="1.5" opacity=".3"/>
-          <rect x="1010" y="702" width="100" height="3" rx="1.5" opacity=".22"/>
-          <rect x="1035" y="730" width="50" height="3" rx="1.5" opacity=".16"/>
-        </g>
-        <path d="M60 640h120M300 668h180M620 650h90M140 720h220M520 760h160M40 820h260M760 700h120M380 840h200M860 860h140M700 800h90"
-              stroke="#9cc3d8" stroke-opacity=".18" stroke-width="2" stroke-linecap="round"/>
-
-        <!-- sailboat -->
-        <g fill="#0b1c29">
-          <path d="M860 628h64l-9 10h-46z"/>
-          <path d="M894 626v-66l30 64z"/>
-          <path d="M889 624v-52l-22 52z" opacity=".85"/>
-        </g>
-
-        <!-- birds -->
-        <g stroke="#0c2233" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".65">
-          <path d="M860 250q10-8 20 0q10-8 20 0"/>
-          <path d="M915 225q8-6 16 0q8-6 16 0"/>
-          <path d="M820 205q7-5 14 0q7-5 14 0"/>
-        </g>
-
-        <!-- lighthouse beam -->
-        <g class="beam">
-          <path d="M1300 270 520 170v212l780-100z" fill="url(#beam-left)"/>
-          <path d="M1300 270 1640 225v100l-340-43z" fill="url(#beam-right)"/>
-        </g>
-        <circle class="lamp-glow" cx="1300" cy="276" r="42" fill="#fff1c9" opacity=".35"/>
-
-        <!-- lighthouse -->
-        <g>
-          <path d="M1282 300h36l10 215h-56z" fill="#efe6da"/>
-          <path d="M1279.67 350h40.66l1.16 25h-42.98zM1276.42 420h47.16l1.16 25h-49.48z" fill="#b4533a"/>
-          <path d="M1300 300h18l10 215h-28z" fill="#000" opacity=".14"/>
-          <rect x="1294" y="385" width="12" height="18" rx="6" fill="#2b3a46"/>
-          <rect x="1274" y="290" width="52" height="10" rx="2" fill="#21323f"/>
-          <rect x="1284" y="262" width="32" height="28" fill="#ffd27a"/>
-          <path d="M1293 262v28M1307 262v28" stroke="#21323f" stroke-width="2"/>
-          <path d="m1280 262 20-22 20 22z" fill="#21323f"/>
-          <path d="M1300 240v-10" stroke="#21323f" stroke-width="3" stroke-linecap="round"/>
-        </g>
-
-        <!-- hotel -->
-        <g>
-          <rect x="1420" y="402" width="170" height="90" fill="#16324a"/>
-          <rect x="1414" y="395" width="182" height="8" fill="#0f2638"/>
-          <g fill="#ffcf85">
-            <rect x="1435" y="418" width="12" height="16"/><rect x="1460" y="418" width="12" height="16" opacity=".35"/>
-            <rect x="1485" y="418" width="12" height="16"/><rect x="1510" y="418" width="12" height="16"/>
-            <rect x="1535" y="418" width="12" height="16" opacity=".35"/><rect x="1560" y="418" width="12" height="16"/>
-            <rect x="1435" y="450" width="12" height="16" opacity=".35"/><rect x="1460" y="450" width="12" height="16"/>
-            <rect x="1485" y="450" width="12" height="16"/><rect x="1510" y="450" width="12" height="16" opacity=".35"/>
-            <rect x="1535" y="450" width="12" height="16"/><rect x="1560" y="450" width="12" height="16"/>
-          </g>
-        </g>
-
-        <!-- palm -->
-        <g stroke="#0b1c29" stroke-width="5" fill="none" stroke-linecap="round">
-          <path d="M1404 484c-2-32-6-64-12-92"/>
-          <path d="M1392 392q-30-10-52 8M1392 392q-22-24-50-22M1392 392q6-30 30-38M1392 392q30-12 50 6M1392 392q24 4 34 30M1392 392q-18 6-26 32"/>
-        </g>
-
-        <!-- headland -->
-        <path d="M1080 900c30-140 90-260 160-340 40-45 90-74 150-80 70-6 140 0 210 12v408z" fill="#0b1c29"/>
-      </svg>
-
-      <div class="container hero-content">
-        <p class="eyebrow">Seaside hotel &amp; terrace restaurant</p>
-        <h1>Where the light <em>guides you home</em></h1>
-        <p class="lead">Sea-view rooms, slow breakfasts and sunsets from the terrace, a few steps from the old lighthouse.</p>
-        <div class="hero-actions">
-          <a class="btn" href="#rooms">Explore rooms</a>
-          <a class="btn btn-ghost" href="#contact">Contact us</a>
-        </div>
+  <!-- ================= Full-screen menu ================= -->
+  <div class="menu" id="menu" aria-hidden="true">
+    <div class="menu-bg"></div>
+    <div class="menu-inner">
+      <nav class="menu-links" aria-label="Menu">
+        <a href="#top"><i>𓇳</i><span>Home</span></a>
+        <a href="#kingdom"><i>𓅃</i><span>The Kingdom</span></a>
+        <a href="#chambers"><i>𓋹</i><span>Royal Chambers</span></a>
+        <a href="#oasis"><i>𓈖</i><span>Rooftop Oasis</span></a>
+        <a href="#feasts"><i>𓆸</i><span>Royal Feasts</span></a>
+        <a href="#celebrations"><i>𓆣</i><span>Celebrations</span></a>
+        <a href="#treasures"><i>𓂀</i><span>Gallery</span></a>
+        <a href="#contact"><i>𓊽</i><span>Contact</span></a>
+      </nav>
+      <div class="menu-aside">
+        <p class="eyebrow">Reservations</p>
+        <p><a href="tel:+94706696663">+94 70 669 6663</a><br><a href="mailto:info@thepharo.lk">info@thepharo.lk</a></p>
+        <p class="eyebrow">Find us</p>
+        <p>137 Colombo–Kandy Road<br>Nittambuwa 11880, Sri Lanka</p>
+        <p><a href="https://www.facebook.com/thepharohotel" target="_blank" rel="noopener">Facebook ↗</a></p>
       </div>
-    </section>
+    </div>
+  </div>
 
-    <!-- ============ Quick booking ============ -->
-    <section class="booking-wrap" id="book" aria-label="Check availability">
-      <div class="container">
-        <form class="booking" id="booking-form" novalidate>
-          <div class="field">
-            <label for="checkin">Check-in</label>
-            <input type="date" id="checkin" name="checkin" required>
-          </div>
-          <div class="field">
-            <label for="checkout">Check-out</label>
-            <input type="date" id="checkout" name="checkout" required>
-          </div>
-          <div class="field">
-            <label for="guests">Guests</label>
-            <select id="guests" name="guests">
-              <option value="1">1 guest</option>
-              <option value="2" selected>2 guests</option>
-              <option value="3">3 guests</option>
-              <option value="4">4 guests</option>
-              <option value="5">5 guests</option>
-              <option value="6">6 guests</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="room">Room</label>
-            <select id="room" name="room">
-              <option>Any room</option>
-              <option>Garden Room</option>
-              <option>Deluxe Sea View</option>
-              <option>Family Suite</option>
-            </select>
-          </div>
-          <button class="btn" type="submit">Check availability</button>
-          <p class="form-status" role="status" aria-live="polite"></p>
-        </form>
-      </div>
-    </section>
+  <a class="float-wa magnetic" href="https://wa.me/94706696663" target="_blank" rel="noopener" aria-label="Chat with The Pharo on WhatsApp">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3a13 13 0 0 0-11.2 19.6L3 29l6.6-1.7A13 13 0 1 0 16 3zm0 23.7a10.7 10.7 0 0 1-5.5-1.5l-.4-.2-3.9 1 1-3.8-.2-.4A10.7 10.7 0 1 1 16 26.7zm5.9-8c-.3-.2-1.9-.9-2.2-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7 0a8.8 8.8 0 0 1-4.4-3.8c-.3-.6.3-.5.9-1.7.1-.2 0-.4 0-.5l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.9.4 3.6 3.6 0 0 0-1.1 2.7 6.3 6.3 0 0 0 1.3 3.3 14.4 14.4 0 0 0 5.5 4.9c2 .9 2.8 1 3.9.8a3.3 3.3 0 0 0 2.1-1.5 2.7 2.7 0 0 0 .2-1.5c-.1-.2-.3-.3-.6-.4z" fill="currentColor"/></svg>
+  </a>
 
-    <!-- ============ About ============ -->
-    <section class="section" id="about">
-      <div class="container split">
-        <div class="reveal">
-          <p class="eyebrow">About Pharo</p>
-          <h2>A small hotel with a big view</h2>
-          <p class="lead">Pharo takes its name from the lighthouse on the headland: a landmark that has welcomed travellers for generations.</p>
-          <p class="muted">We keep things simple. Bright rooms that open to the sea, a kitchen that cooks with what the market brings in, and a team that remembers how you take your coffee. Come for the view, stay for the quiet.</p>
-          <ul class="stats">
-            <li><strong>24</strong><span>Rooms &amp; suites</span></li>
-            <li><strong>5 min</strong><span>Walk to the beach</span></li>
-            <li><strong>24/7</strong><span>Front desk</span></li>
-          </ul>
-        </div>
-        <div class="ph ph-sunset about-photo reveal" role="img" aria-label="Photo placeholder: hotel exterior">
-          <span>Hotel exterior photo</span>
-        </div>
-      </div>
-    </section>
+  <div id="smooth-wrapper">
+    <div id="smooth-content">
+      <main id="main">
 
-    <!-- ============ Rooms ============ -->
-    <section class="section section-white" id="rooms">
-      <div class="container">
-        <div class="section-head center reveal">
-          <p class="eyebrow">Rooms &amp; suites</p>
-          <h2>Rest easy, wake up to the sea</h2>
-          <p class="muted">Every room has air conditioning, fast Wi-Fi, a rain shower and breakfast included.</p>
-        </div>
+        <!-- ================= Hero ================= -->
+        <section class="hero" id="top">
+          <div class="hero-media">
+            <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=2400&q=80"
+                 srcset="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=900&q=80 900w,
+                         https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1600&q=80 1600w,
+                         https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=2400&q=80 2400w"
+                 sizes="100vw" alt="The pool and hotel at dusk" fetchpriority="high">
+          </div>
+          <canvas class="hero-dust" aria-hidden="true"></canvas>
+          <div class="hero-shade"></div>
 
-        <div class="cards">
-          <article class="card reveal">
-            <div class="ph ph-garden" role="img" aria-label="Photo placeholder: Garden Room"><span>Room photo</span></div>
-            <div class="card-body">
-              <h3>Garden Room</h3>
-              <ul class="room-meta">
-                <li>22 m²</li><li>Queen bed</li><li>Garden view</li>
-              </ul>
-              <p class="muted">A calm, shaded room that opens onto the palm garden. Ideal for solo travellers and couples.</p>
-              <div class="card-foot">
-                <p class="price"><strong>$89</strong> / night</p>
-                <a class="btn btn-outline btn-small" href="#contact" data-room="Garden Room">Enquire</a>
-              </div>
+          <div class="hero-inner">
+            <p class="eyebrow hero-eyebrow"><span class="line"></span>Nittambuwa · Sri Lanka</p>
+            <h1 class="hero-title">
+              <span class="ht-line">Rest like</span>
+              <span class="ht-line"><em>royalty</em></span>
+            </h1>
+            <p class="hero-sub">A modern palace on the Colombo–Kandy road, with a rooftop pool, a sky lounge, two grand ballrooms and four places to eat and drink under one roof.</p>
+            <div class="hero-cta">
+              <a class="btn btn-gold magnetic" href="#reserve"><span>Reserve your stay</span></a>
+              <a class="btn btn-line magnetic" href="#kingdom"><span>Enter the kingdom</span></a>
             </div>
-          </article>
-
-          <article class="card reveal">
-            <div class="ph ph-sea" role="img" aria-label="Photo placeholder: Deluxe Sea View room">
-              <span>Room photo</span>
-              <em class="card-tag">Most popular</em>
-            </div>
-            <div class="card-body">
-              <h3>Deluxe Sea View</h3>
-              <ul class="room-meta">
-                <li>30 m²</li><li>King bed</li><li>Private balcony</li>
-              </ul>
-              <p class="muted">Floor-to-ceiling windows, a balcony facing the sunset and the sound of the waves at night.</p>
-              <div class="card-foot">
-                <p class="price"><strong>$129</strong> / night</p>
-                <a class="btn btn-outline btn-small" href="#contact" data-room="Deluxe Sea View">Enquire</a>
-              </div>
-            </div>
-          </article>
-
-          <article class="card reveal">
-            <div class="ph ph-sand" role="img" aria-label="Photo placeholder: Family Suite"><span>Room photo</span></div>
-            <div class="card-body">
-              <h3>Family Suite</h3>
-              <ul class="room-meta">
-                <li>45 m²</li><li>2 bedrooms</li><li>Sleeps 4</li>
-              </ul>
-              <p class="muted">Two connected bedrooms and a lounge corner, with space for the whole family to spread out.</p>
-              <div class="card-foot">
-                <p class="price"><strong>$189</strong> / night</p>
-                <a class="btn btn-outline btn-small" href="#contact" data-room="Family Suite">Enquire</a>
-              </div>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ Amenities ============ -->
-    <section class="section" id="amenities">
-      <div class="container">
-        <div class="section-head center reveal">
-          <p class="eyebrow">Amenities</p>
-          <h2>Everything you need, nothing you don't</h2>
-        </div>
-
-        <div class="amenities">
-          <div class="amenity reveal">
-            <span class="icon"><svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg></span>
-            <h3>Free Wi-Fi</h3>
-            <p>Fast fibre in every room and on the terrace.</p>
           </div>
-          <div class="amenity reveal">
-            <span class="icon"><svg viewBox="0 0 24 24"><path d="M8 14V5a2 2 0 0 1 4 0M14 14V5a2 2 0 0 1 4 0M8 8h6M8 11h6M2 18c2 0 2-1.5 4-1.5s2 1.5 4 1.5 2-1.5 4-1.5 2 1.5 4 1.5 2-1.5 4-1.5M2 22c2 0 2-1.5 4-1.5s2 1.5 4 1.5 2-1.5 4-1.5 2 1.5 4 1.5 2-1.5 4-1.5"/></svg></span>
-            <h3>Outdoor pool</h3>
-            <p>Infinity-edge pool with loungers and towels.</p>
-          </div>
-          <div class="amenity reveal">
-            <span class="icon"><svg viewBox="0 0 24 24"><path d="M7 2v20M4 2v6a3 3 0 0 0 6 0V2M17 22V2c-2.5 1.5-4 4-4 8h4"/></svg></span>
-            <h3>Restaurant &amp; bar</h3>
-            <p>Fresh local food from breakfast to late dinner.</p>
-          </div>
-          <div class="amenity reveal">
-            <span class="icon"><svg viewBox="0 0 24 24"><path d="M12 4c2 2.5 2 7 0 10-2-3-2-7.5 0-10zM12 14c-3 0-6-2-7-6 3 0 5.5 1.5 7 6zM12 14c3 0 6-2 7-6-3 0-5.5 1.5-7 6zM6 18c2 1.3 4 2 6 2s4-.7 6-2"/></svg></span>
-            <h3>Spa &amp; wellness</h3>
-            <p>Massages, yoga deck and a quiet reading room.</p>
-          </div>
-          <div class="amenity reveal">
-            <span class="icon"><svg viewBox="0 0 24 24"><path d="M23 12a11.05 11.05 0 0 0-22 0zm-5 7a3 3 0 0 1-6 0v-7"/></svg></span>
-            <h3>Beach access</h3>
-            <p>A short path down to a sandy, swimmable bay.</p>
-          </div>
-          <div class="amenity reveal">
-            <span class="icon"><svg viewBox="0 0 24 24"><path d="M4 16v-4l2-5h12l2 5v4zM4 12h16"/><circle cx="7.5" cy="16.5" r="1.5"/><circle cx="16.5" cy="16.5" r="1.5"/></svg></span>
-            <h3>Airport transfers</h3>
-            <p>Private pick-up and drop-off on request.</p>
-          </div>
-          <div class="amenity reveal">
-            <span class="icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 17V7h4a3 3 0 0 1 0 6H9"/></svg></span>
-            <h3>Free parking</h3>
-            <p>Secure on-site parking for all guests.</p>
-          </div>
-          <div class="amenity reveal">
-            <span class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span>
-            <h3>24-hour front desk</h3>
-            <p>Late arrival? Someone is always here to help.</p>
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <!-- ============ Dining ============ -->
-    <section class="section section-dark" id="dining">
-      <div class="container split reverse">
-        <div class="reveal">
-          <p class="eyebrow">Dining</p>
-          <h2>The Lantern terrace</h2>
-          <p class="lead">Grilled catch of the day, garden salads and slow-cooked curries, served on a terrace that catches the last of the sun.</p>
-          <ul class="hours">
-            <li><span>Breakfast</span><span>7:00 – 10:30</span></li>
-            <li><span>Lunch</span><span>12:00 – 15:00</span></li>
-            <li><span>Dinner</span><span>18:30 – 22:30</span></li>
-            <li><span>Sunset bar</span><span>17:00 – late</span></li>
-          </ul>
-          <a class="btn btn-ghost" href="#contact">Reserve a table</a>
-        </div>
-        <div class="ph ph-night about-photo reveal" role="img" aria-label="Photo placeholder: restaurant terrace">
-          <span>Restaurant photo</span>
-        </div>
-      </div>
-    </section>
+          <div class="cartouche" aria-label="The name Pharo written in hieroglyphs" role="img">
+            <span>𓊪</span><span>𓉔</span><span>𓄿</span><span>𓂋</span><span>𓅱</span>
+          </div>
 
-    <!-- ============ Gallery ============ -->
-    <section class="section" id="gallery">
-      <div class="container">
-        <div class="section-head center reveal">
-          <p class="eyebrow">Gallery</p>
-          <h2>A look around</h2>
-          <p class="muted">Placeholder tiles. Drop your own photos into <code>assets/img/</code> and swap them in.</p>
-        </div>
+          <a class="scroll-cue" href="#reserve" aria-label="Scroll down">
+            <span class="scroll-cue-line"></span>
+            <span class="scroll-cue-text">Scroll</span>
+          </a>
+        </section>
 
-        <div class="gallery reveal">
-          <div class="ph ph-sunset wide tall" role="img" aria-label="Photo placeholder: lobby"><span>Lobby</span></div>
-          <div class="ph ph-sea" role="img" aria-label="Photo placeholder: pool"><span>Pool</span></div>
-          <div class="ph ph-garden" role="img" aria-label="Photo placeholder: garden"><span>Garden</span></div>
-          <div class="ph ph-sand" role="img" aria-label="Photo placeholder: breakfast"><span>Breakfast</span></div>
-          <div class="ph ph-terracotta" role="img" aria-label="Photo placeholder: spa"><span>Spa</span></div>
-          <div class="ph ph-night wide" role="img" aria-label="Photo placeholder: terrace at night"><span>Terrace at night</span></div>
-          <div class="ph ph-sea-light wide" role="img" aria-label="Photo placeholder: beach"><span>Beach</span></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ Contact ============ -->
-    <section class="section section-white" id="contact">
-      <div class="container contact-grid">
-        <div class="reveal">
-          <p class="eyebrow">Contact</p>
-          <h2>Plan your stay</h2>
-          <p class="muted">Send us your dates and we'll reply within a day with availability and the best rate.</p>
-
-          <ul class="contact-list">
-            <li>
-              <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              <div><strong>Address</strong><br>123 Harbour Road, Your City, Country</div>
-            </li>
-            <li>
-              <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-              <div><strong>Phone</strong><br><a href="tel:+000000000000">+00 00 000 0000</a></div>
-            </li>
-            <li>
-              <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="m22 6-10 7L2 6"/></svg>
-              <div><strong>Email</strong><br><a href="mailto:hello@example.com">hello@example.com</a></div>
-            </li>
-            <li>
-              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-              <div><strong>Check-in / check-out</strong><br>From 14:00 / until 11:00</div>
-            </li>
-          </ul>
-
-          <div class="ph ph-sea-light map-ph" role="img" aria-label="Map placeholder"><span>Map embed goes here</span></div>
-        </div>
-
-        <div class="form-card reveal">
-          <h3>Send an enquiry</h3>
-          <form id="contact-form" class="form-grid" novalidate>
-            <div class="field">
-              <label for="c-name">Full name</label>
-              <input id="c-name" name="name" type="text" autocomplete="name" required>
+        <!-- ================= Reservation bar ================= -->
+        <section class="reserve" id="reserve" aria-label="Check availability">
+          <form class="reserve-form" id="reserve-form" novalidate>
+            <div class="rf-field">
+              <label for="rf-in">Arrival</label>
+              <input type="date" id="rf-in" name="checkin" required>
             </div>
-            <div class="field">
-              <label for="c-email">Email</label>
-              <input id="c-email" name="email" type="email" autocomplete="email" required>
+            <div class="rf-field">
+              <label for="rf-out">Departure</label>
+              <input type="date" id="rf-out" name="checkout" required>
             </div>
-            <div class="field">
-              <label for="c-checkin">Check-in</label>
-              <input id="c-checkin" name="checkin" type="date">
-            </div>
-            <div class="field">
-              <label for="c-checkout">Check-out</label>
-              <input id="c-checkout" name="checkout" type="date">
-            </div>
-            <div class="field">
-              <label for="c-room">Room</label>
-              <select id="c-room" name="room">
-                <option>Any room</option>
-                <option>Garden Room</option>
-                <option>Deluxe Sea View</option>
-                <option>Family Suite</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="c-guests">Guests</label>
-              <select id="c-guests" name="guests">
+            <div class="rf-field">
+              <label for="rf-guests">Guests</label>
+              <select id="rf-guests" name="guests">
                 <option value="1">1 guest</option>
                 <option value="2" selected>2 guests</option>
                 <option value="3">3 guests</option>
                 <option value="4">4 guests</option>
-                <option value="5">5 guests</option>
-                <option value="6">6 guests</option>
+                <option value="5">5+ guests</option>
               </select>
             </div>
-            <div class="field full">
-              <label for="c-message">Message</label>
-              <textarea id="c-message" name="message" rows="5" placeholder="Anything we should know? Late arrival, dietary needs, special occasion…"></textarea>
+            <div class="rf-field">
+              <label for="rf-room">Chamber</label>
+              <select id="rf-room" name="room">
+                <option>Any room</option>
+                <option>Deluxe King Room</option>
+                <option>Deluxe Balcony Room</option>
+                <option>Family Room</option>
+              </select>
             </div>
-            <div class="full">
-              <button class="btn" type="submit">Send enquiry</button>
-              <p class="form-note">Test form: nothing is sent yet. Connect it to a form service or backend before launch.</p>
-            </div>
-            <p class="form-status full" role="status" aria-live="polite"></p>
+            <button class="btn btn-gold rf-submit" type="submit"><span>Check availability</span></button>
+            <p class="rf-note" role="status" aria-live="polite">Sends your dates to our reservations team on WhatsApp.</p>
           </form>
-        </div>
-      </div>
-    </section>
-  </main>
+        </section>
 
-  <!-- ============ Footer ============ -->
-  <footer class="site-footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <p class="brand-name">Pharo<small>Hotel</small></p>
-          <p>Seaside rooms, a terrace restaurant and the best sunset on the coast.</p>
+        <!-- ================= Marquee ================= -->
+        <div class="marquee" aria-hidden="true">
+          <div class="marquee-row">
+            <div class="marquee-track">
+              <span>Rooftop Pool</span><i>𓈖</i><span>Sky Lounge</span><i>𓇳</i><span>Grand Ballroom</span><i>𓋹</i><span>Lavender Ballroom</span><i>𓆸</i><span>The Palm Court</span><i>𓂀</i><span>The Let Berry</span><i>𓆣</i><span>Tavern Blue</span><i>𓅃</i><span>Café Brew</span><i>𓊽</i>
+            </div>
+          </div>
         </div>
-        <div>
-          <h4>Explore</h4>
-          <ul>
-            <li><a href="#rooms">Rooms</a></li>
-            <li><a href="#amenities">Amenities</a></li>
-            <li><a href="#dining">Dining</a></li>
-            <li><a href="#gallery">Gallery</a></li>
-          </ul>
+
+        <!-- ================= The Kingdom (about) ================= -->
+        <section class="section kingdom" id="kingdom">
+          <div class="container">
+            <div class="section-mark"><svg><use href="#winged-sun"/></svg></div>
+            <p class="eyebrow center">Welcome to The Pharo</p>
+            <p class="statement" data-scrub-words>Named for the kings of the Nile and built for the travellers of today, The Pharo brings a touch of royal ceremony to every stay, every feast and every celebration.</p>
+
+            <div class="kingdom-grid">
+              <figure class="kg-img kg-img--a media" data-speed="0.9">
+                <img data-reveal src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80" alt="Hotel entrance lit at night" loading="lazy">
+              </figure>
+              <div class="kg-copy">
+                <h2 class="h2" data-split>A palace on the <em>Kandy road</em></h2>
+                <p>Opened in 2021 by the British Way Group, The Pharo stands in the heart of Nittambuwa on the Colombo–Kandy road, an easy stop between the capital and the hill country.</p>
+                <p>Inside you'll find air-conditioned rooms, a rooftop pool with a sky lounge, two restaurants, a bar, a café and two ballrooms that each welcome up to 350 guests.</p>
+                <a class="link-arrow" href="#chambers">Explore the chambers <span>→</span></a>
+              </div>
+              <figure class="kg-img kg-img--b media" data-speed="1.12">
+                <img data-reveal src="https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&w=1000&q=80" alt="Hotel lounge interior" loading="lazy">
+              </figure>
+            </div>
+
+            <ul class="stats">
+              <li><strong data-count="2">2</strong><span>Grand ballrooms</span></li>
+              <li><strong data-count="350">350</strong><span>Guests per ballroom</span></li>
+              <li><strong data-count="4">4</strong><span>Restaurants, bar &amp; café</span></li>
+              <li><strong data-count="8.4" data-decimals="1">8.4</strong><span>Guest score on Booking.com</span></li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ================= Royal Chambers (horizontal) ================= -->
+        <section class="chambers" id="chambers">
+          <div class="chambers-pin">
+            <div class="chambers-track">
+              <div class="chamber-intro">
+                <p class="eyebrow">Royal Chambers</p>
+                <h2 class="h2" data-split>Rooms fit for a <em>pharaoh</em></h2>
+                <p>Every room is fully air-conditioned, with hot and cold water, satellite TV, tea and coffee, free Wi-Fi and daily housekeeping.</p>
+                <p class="drag-hint"><span></span>Scroll to explore</p>
+              </div>
+
+              <article class="chamber">
+                <figure class="chamber-media media">
+                  <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1400&q=80" alt="Deluxe King Room" loading="lazy">
+                  <span class="chamber-num">I</span>
+                </figure>
+                <div class="chamber-body">
+                  <h3>Deluxe King Room</h3>
+                  <p>Considerately spacious and designed around a good night's sleep.</p>
+                  <ul class="chips"><li>King-size bed</li><li>Air conditioning</li><li>Satellite TV</li><li>Tea &amp; coffee</li></ul>
+                  <div class="chamber-foot">
+                    <p class="price"><small>From</small> Rs. 6,000 <small>/ night</small></p>
+                    <a class="btn btn-line btn-sm" href="#reserve" data-room="Deluxe King Room"><span>Reserve</span></a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="chamber">
+                <figure class="chamber-media media">
+                  <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1400&q=80" alt="Deluxe Balcony Room" loading="lazy">
+                  <span class="chamber-num">II</span>
+                </figure>
+                <div class="chamber-body">
+                  <h3>Deluxe Balcony Room</h3>
+                  <p>The Deluxe, with a private mini balcony for your morning tea.</p>
+                  <ul class="chips"><li>King-size bed</li><li>Mini balcony</li><li>Hot &amp; cold water</li><li>Free Wi-Fi</li></ul>
+                  <div class="chamber-foot">
+                    <p class="price">Rates on request</p>
+                    <a class="btn btn-line btn-sm" href="#reserve" data-room="Deluxe Balcony Room"><span>Reserve</span></a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="chamber">
+                <figure class="chamber-media media">
+                  <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1400&q=80" alt="Family Room" loading="lazy">
+                  <span class="chamber-num">III</span>
+                </figure>
+                <div class="chamber-body">
+                  <h3>Family Room</h3>
+                  <p>Room for everyone, with a balcony, a work desk and soundproofing.</p>
+                  <ul class="chips"><li>Balcony</li><li>Work desk</li><li>Soundproofed</li><li>Private bathroom</li></ul>
+                  <div class="chamber-foot">
+                    <p class="price">Rates on request</p>
+                    <a class="btn btn-line btn-sm" href="#reserve" data-room="Family Room"><span>Reserve</span></a>
+                  </div>
+                </div>
+              </article>
+
+              <div class="chamber-end">
+                <span class="glyph-xl">𓋹</span>
+                <p>Every stay includes free Wi-Fi and daily housekeeping.</p>
+                <a class="btn btn-gold magnetic" href="#reserve"><span>Check availability</span></a>
+              </div>
+            </div>
+            <div class="chambers-bar"><span></span></div>
+          </div>
+        </section>
+
+        <!-- ================= Rooftop Oasis ================= -->
+        <section class="oasis" id="oasis">
+          <div class="oasis-pin">
+            <div class="oasis-media media">
+              <img src="https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=2400&q=80" alt="Pool with loungers" loading="lazy">
+            </div>
+            <div class="oasis-shade"></div>
+            <div class="oasis-copy">
+              <p class="eyebrow">Above it all</p>
+              <h2 class="oasis-title">The Rooftop <em>Oasis</em></h2>
+              <p>Swim above the town, then stay for sunset at the sky lounge. A favourite for birthdays and get-togethers.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= Royal Feasts ================= -->
+        <section class="section feasts" id="feasts">
+          <div class="container">
+            <div class="section-head">
+              <p class="eyebrow">Royal Feasts</p>
+              <h2 class="h2" data-split>Four tables, <em>one kingdom</em></h2>
+              <p class="muted">Indian, Indonesian, Italian, pizza, Sri Lankan and Asian cooking for lunch, dinner, high tea and cocktails.</p>
+            </div>
+
+            <div class="feasts-grid">
+              <ol class="venues">
+                <li class="venue is-active" data-venue="0">
+                  <span class="venue-num">01</span>
+                  <div><h3>The Let Berry</h3><p>Restaurant · Spacious dining for family lunches and long dinners.</p></div>
+                </li>
+                <li class="venue" data-venue="1">
+                  <span class="venue-num">02</span>
+                  <div><h3>The Palm Court</h3><p>Restaurant · Made for gatherings large and small.</p></div>
+                </li>
+                <li class="venue" data-venue="2">
+                  <span class="venue-num">03</span>
+                  <div><h3>Tavern Blue</h3><p>Bar · Cocktails, cold drinks and good conversation.</p></div>
+                </li>
+                <li class="venue" data-venue="3">
+                  <span class="venue-num">04</span>
+                  <div><h3>Café Brew</h3><p>Café · Coffee, cake and high tea by the garden and terrace.</p></div>
+                </li>
+              </ol>
+              <div class="venue-stage media">
+                <img class="is-active" src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1400&q=80" alt="Plated dishes at The Let Berry" loading="lazy">
+                <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1400&q=80" alt="Dining room at The Palm Court" loading="lazy">
+                <img src="https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=1400&q=80" alt="Cocktails at Tavern Blue" loading="lazy">
+                <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1400&q=80" alt="Coffee at Café Brew" loading="lazy">
+                <span class="venue-frame"></span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= Celebrations (stacking cards) ================= -->
+        <section class="section celebrations" id="celebrations">
+          <div class="container">
+            <div class="section-head center">
+              <p class="eyebrow center">Grand Celebrations</p>
+              <h2 class="h2" data-split>Weddings worthy <em>of legend</em></h2>
+              <p class="muted">Two ballrooms of 350 guests each, and a rooftop made for parties.</p>
+            </div>
+
+            <div class="stack">
+              <article class="stack-card">
+                <figure class="media"><img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=1600&q=80" alt="Ballroom set for a wedding reception" loading="lazy"></figure>
+                <div class="stack-copy">
+                  <span class="stack-num">𓇳 I</span>
+                  <h3>The Grand Ballroom</h3>
+                  <p>Our largest hall, for weddings, homecomings and receptions that deserve a grand entrance.</p>
+                  <p class="stack-cap"><strong>350</strong> guests</p>
+                </div>
+              </article>
+              <article class="stack-card">
+                <figure class="media"><img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=1600&q=80" alt="Elegant table setting in the Lavender Ballroom" loading="lazy"></figure>
+                <div class="stack-copy">
+                  <span class="stack-num">𓆸 II</span>
+                  <h3>The Lavender Ballroom</h3>
+                  <p>An elegant setting for weddings, parties and corporate functions.</p>
+                  <p class="stack-cap"><strong>350</strong> guests</p>
+                </div>
+              </article>
+              <article class="stack-card">
+                <figure class="media"><img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=1600&q=80" alt="Drinks at the sky lounge" loading="lazy"></figure>
+                <div class="stack-copy">
+                  <span class="stack-num">𓈖 III</span>
+                  <h3>Rooftop &amp; Sky Lounge</h3>
+                  <p>Birthdays and get-togethers by the pool, under the open sky.</p>
+                  <p class="stack-cap"><strong>Private</strong> parties</p>
+                </div>
+              </article>
+            </div>
+
+            <div class="center-cta">
+              <a class="btn btn-gold magnetic" href="#contact"><span>Plan your event</span></a>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= Royal Privileges (amenities) ================= -->
+        <section class="section privileges">
+          <div class="frieze" aria-hidden="true"></div>
+          <div class="container">
+            <div class="section-head center">
+              <p class="eyebrow center">Royal Privileges</p>
+              <h2 class="h2" data-split>Everything, <em>as it should be</em></h2>
+            </div>
+            <ul class="amenities">
+              <li><svg viewBox="0 0 24 24"><path d="M8 14V5a2 2 0 0 1 4 0M14 14V5a2 2 0 0 1 4 0M8 8h6M8 11h6M2 18c2 0 2-1.5 4-1.5s2 1.5 4 1.5 2-1.5 4-1.5 2 1.5 4 1.5 2-1.5 4-1.5M2 22c2 0 2-1.5 4-1.5s2 1.5 4 1.5 2-1.5 4-1.5 2 1.5 4 1.5 2-1.5 4-1.5"/></svg><span>Rooftop pool</span></li>
+              <li><svg viewBox="0 0 24 24"><path d="M8 22h8M12 11v11M3 3h18l-9 9z"/></svg><span>Sky lounge</span></li>
+              <li><svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg><span>Free Wi-Fi</span></li>
+              <li><svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20M5 5l14 14M19 5 5 19"/></svg><span>Air conditioning</span></li>
+              <li><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="m17 2-5 5-5-5"/></svg><span>Satellite TV</span></li>
+              <li><svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4zM6 1v3M10 1v3M14 1v3"/></svg><span>Tea &amp; coffee</span></li>
+              <li><svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg><span>Hot &amp; cold water</span></li>
+              <li><svg viewBox="0 0 24 24"><path d="M12 3l1.9 5.8L20 10l-6.1 1.2L12 17l-1.9-5.8L4 10l6.1-1.2zM19 16l.7 2.3L22 19l-2.3.7L19 22l-.7-2.3L16 19l2.3-.7z"/></svg><span>Daily housekeeping</span></li>
+              <li><svg viewBox="0 0 24 24"><path d="M7 2v20M4 2v6a3 3 0 0 0 6 0V2M17 22V2c-2.5 1.5-4 4-4 8h4"/></svg><span>Restaurants &amp; bar</span></li>
+              <li><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/><circle cx="9" cy="7" r="4"/></svg><span>Banquet halls</span></li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ================= Treasures (gallery) ================= -->
+        <section class="section treasures" id="treasures">
+          <div class="container">
+            <div class="section-head">
+              <p class="eyebrow">Treasures of The Pharo</p>
+              <h2 class="h2" data-split>A glimpse <em>inside</em></h2>
+            </div>
+          </div>
+          <div class="gallery">
+            <div class="g-col" data-speed="0.92">
+              <button class="g-item media" type="button"><img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1000&q=80" alt="Poolside loungers" loading="lazy"></button>
+              <button class="g-item media tall" type="button"><img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=1000&q=80" alt="Bedroom with warm lighting" loading="lazy"></button>
+            </div>
+            <div class="g-col" data-speed="1.08">
+              <button class="g-item media tall" type="button"><img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1000&q=80" alt="Hotel building exterior" loading="lazy"></button>
+              <button class="g-item media" type="button"><img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1000&q=80" alt="A plated dish" loading="lazy"></button>
+            </div>
+            <div class="g-col" data-speed="0.96">
+              <button class="g-item media" type="button"><img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1000&q=80" alt="Restaurant tables" loading="lazy"></button>
+              <button class="g-item media tall" type="button"><img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1000&q=80" alt="Pool and hotel terrace" loading="lazy"></button>
+            </div>
+            <div class="g-col" data-speed="1.14">
+              <button class="g-item media tall" type="button"><img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1000&q=80" alt="Wedding couple" loading="lazy"></button>
+              <button class="g-item media" type="button"><img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1000&q=80" alt="Guest room" loading="lazy"></button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= Accolades ================= -->
+        <section class="accolades">
+          <div class="container accolades-row">
+            <div class="accolade"><strong data-count="8.4" data-decimals="1">8.4</strong><span>Booking.com<br>guest score</span></div>
+            <div class="accolade-sun"><svg><use href="#winged-sun"/></svg></div>
+            <div class="accolade"><strong data-count="4" data-decimals="1">4.0</strong><span>Tripadvisor<br>rating</span></div>
+          </div>
+        </section>
+
+        <!-- ================= Contact ================= -->
+        <section class="section contact" id="contact">
+          <div class="container contact-grid">
+            <div class="contact-info">
+              <p class="eyebrow">Find the Kingdom</p>
+              <h2 class="h2" data-split>Your throne <em>awaits</em></h2>
+              <ul class="contact-list">
+                <li><span>Address</span>137 Colombo–Kandy Road, Nittambuwa 11880, Sri Lanka</li>
+                <li><span>Phone</span><a href="tel:+94706696663">+94 70 669 6663</a></li>
+                <li><span>Email</span><a href="mailto:info@thepharo.lk">info@thepharo.lk</a></li>
+                <li><span>Social</span><a href="https://www.facebook.com/thepharohotel" target="_blank" rel="noopener">facebook.com/thepharohotel</a></li>
+              </ul>
+              <div class="map media">
+                <iframe title="Map: The Pharo, Nittambuwa" src="https://www.google.com/maps?q=The+Pharo+Hotel,+137+Kandy+-+Colombo+Rd,+Nittambuwa,+Sri+Lanka&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+              </div>
+            </div>
+
+            <form class="enquiry" id="enquiry-form" novalidate>
+              <h3>Send an enquiry</h3>
+              <div class="enquiry-grid">
+                <div class="f-field"><label for="e-name">Your name</label><input id="e-name" name="name" autocomplete="name" required></div>
+                <div class="f-field"><label for="e-phone">Phone or email</label><input id="e-phone" name="contact" autocomplete="tel" required></div>
+                <div class="f-field">
+                  <label for="e-type">Enquiring about</label>
+                  <select id="e-type" name="type">
+                    <option>A room stay</option>
+                    <option>A wedding</option>
+                    <option>A party or get-together</option>
+                    <option>A corporate event</option>
+                    <option>Dining</option>
+                  </select>
+                </div>
+                <div class="f-field"><label for="e-date">Preferred date</label><input id="e-date" name="date" type="date"></div>
+                <div class="f-field full"><label for="e-msg">Message</label><textarea id="e-msg" name="message" rows="4" placeholder="Number of guests, special requests…"></textarea></div>
+              </div>
+              <div class="enquiry-actions">
+                <button class="btn btn-gold" type="submit" data-channel="whatsapp"><span>Send on WhatsApp</span></button>
+                <button class="btn btn-line" type="submit" data-channel="email"><span>Send by email</span></button>
+              </div>
+              <p class="f-status" role="status" aria-live="polite"></p>
+            </form>
+          </div>
+        </section>
+
+        <!-- ================= Finale: pyramids ================= -->
+        <section class="finale">
+          <svg class="pyramids" viewBox="0 0 1600 700" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+            <defs>
+              <linearGradient id="py-sky" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#07070a"/>
+                <stop offset=".55" stop-color="#101c33"/>
+                <stop offset=".85" stop-color="#6b4a2c"/>
+                <stop offset="1" stop-color="#c9a45c"/>
+              </linearGradient>
+              <radialGradient id="py-sun">
+                <stop offset="0" stop-color="#ffe7b0"/>
+                <stop offset=".25" stop-color="#e8c47a" stop-opacity=".9"/>
+                <stop offset="1" stop-color="#c9a45c" stop-opacity="0"/>
+              </radialGradient>
+              <linearGradient id="py-lit" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#d9b56e"/>
+                <stop offset="1" stop-color="#7a5a2c"/>
+              </linearGradient>
+              <linearGradient id="py-dark" x1="1" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#5a4222"/>
+                <stop offset="1" stop-color="#1c150c"/>
+              </linearGradient>
+            </defs>
+            <rect width="1600" height="700" fill="url(#py-sky)"/>
+            <g class="py-stars" fill="#f3e3bd">
+              <circle cx="140" cy="80" r="1.4"/><circle cx="320" cy="150" r="1"/><circle cx="520" cy="60" r="1.6"/>
+              <circle cx="700" cy="120" r="1"/><circle cx="980" cy="70" r="1.4"/><circle cx="1150" cy="140" r="1"/>
+              <circle cx="1330" cy="60" r="1.6"/><circle cx="1480" cy="160" r="1.1"/><circle cx="240" cy="260" r="1"/>
+              <circle cx="1400" cy="260" r="1"/><circle cx="860" cy="30" r="1.2"/><circle cx="60" cy="200" r="1"/>
+            </g>
+            <g class="py-sun">
+              <circle cx="800" cy="360" r="260" fill="url(#py-sun)" opacity=".7"/>
+              <circle cx="800" cy="360" r="70" fill="#f6dca0"/>
+            </g>
+            <!-- back pyramids -->
+            <path d="M440 330 230 600h420z" fill="url(#py-lit)" opacity=".75"/>
+            <path d="M440 330 230 600h170z" fill="url(#py-dark)" opacity=".85"/>
+            <path d="M1215 380 1050 600h330z" fill="url(#py-lit)" opacity=".7"/>
+            <path d="M1215 380 1050 600h120z" fill="url(#py-dark)" opacity=".85"/>
+            <!-- great pyramid -->
+            <path class="py-great" d="M800 190 470 600h660z" fill="url(#py-lit)"/>
+            <path d="M800 190 470 600h390z" fill="url(#py-dark)"/>
+            <path class="py-edge" d="M470 600 800 190 1130 600M800 190 860 600" fill="none" stroke="#f0d69a" stroke-width="1.5" stroke-opacity=".7"/>
+            <!-- dunes -->
+            <path d="M0 610c200-40 420-40 640-8s520 30 960-22v120H0z" fill="#2a1f12"/>
+            <path d="M0 650c260-30 520-20 800 5s540 10 800-25v70H0z" fill="#171109"/>
+          </svg>
+          <div class="finale-copy">
+            <p class="eyebrow center">Your kingdom awaits</p>
+            <h2 class="finale-title" data-split>Enter <em>The Pharo</em></h2>
+            <a class="btn btn-gold magnetic" href="#reserve"><span>Reserve your stay</span></a>
+          </div>
+        </section>
+      </main>
+
+      <!-- ================= Footer ================= -->
+      <footer class="site-footer">
+        <div class="frieze" aria-hidden="true"></div>
+        <div class="container">
+          <div class="footer-top">
+            <div class="footer-brand">
+              <svg class="brand-mark" aria-hidden="true"><use href="#mark"/></svg>
+              <p class="footer-word">The Pharo</p>
+              <p class="muted">Hotel · Banquets · Restaurants<br>Nittambuwa, Sri Lanka</p>
+            </div>
+            <div>
+              <h4>Explore</h4>
+              <ul>
+                <li><a href="#chambers">Royal Chambers</a></li>
+                <li><a href="#oasis">Rooftop Oasis</a></li>
+                <li><a href="#feasts">Royal Feasts</a></li>
+                <li><a href="#celebrations">Celebrations</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4>Contact</h4>
+              <ul>
+                <li><a href="tel:+94706696663">+94 70 669 6663</a></li>
+                <li><a href="mailto:info@thepharo.lk">info@thepharo.lk</a></li>
+                <li><a href="https://www.facebook.com/thepharohotel" target="_blank" rel="noopener">Facebook</a></li>
+              </ul>
+            </div>
+            <div class="footer-cartouche" aria-hidden="true"><span>𓊪</span><span>𓉔</span><span>𓄿</span><span>𓂋</span><span>𓅱</span></div>
+          </div>
+          <div class="footer-bottom">
+            <p>&copy; <span id="year">2026</span> The Pharo, Nittambuwa. A British Way Group hotel.</p>
+            <p class="build-info" id="build-info">Local preview</p>
+          </div>
         </div>
-        <div>
-          <h4>Contact</h4>
-          <ul>
-            <li>123 Harbour Road</li>
-            <li><a href="tel:+000000000000">+00 00 000 0000</a></li>
-            <li><a href="mailto:hello@example.com">hello@example.com</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>&copy; <span id="year">2026</span> Pharo Hotel. All rights reserved.</p>
-        <p class="build-info" id="build-info">Local preview</p>
-      </div>
+      </footer>
     </div>
-  </footer>
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" aria-hidden="true">
+    <button class="lightbox-close" type="button" aria-label="Close image">&times;</button>
+    <img alt="">
+  </div>
 
   <aside class="test-badge" id="test-badge" aria-label="Test build notice">
     <strong>TEST BUILD</strong>
-    <span>Names, prices &amp; contacts are placeholders</span>
+    <span>Stock photos until real ones are added</span>
     <button type="button" aria-label="Hide test build notice">&times;</button>
   </aside>
 </body>
