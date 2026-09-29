@@ -62,6 +62,5 @@ Cinzel, Cormorant Garamond and Manrope, plus a 15-glyph subset of Noto Sans Egyp
 ## Before going live
 
 - Remove `<meta name="robots" content="noindex, nofollow">` from `src/partials/layout.html`.
-- Remove the **TEST BUILD** badge (end of `src/partials/overlays.html`).
 - Replace the stock photos and check every fact in the list above.
 - For online payments or a room database, move to PHP/MySQL hosting (GitHub Pages only serves static files).

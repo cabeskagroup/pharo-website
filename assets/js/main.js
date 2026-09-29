@@ -31,12 +31,6 @@
     const motion = !!(gsap && window.ScrollTrigger) && !reduceMotion;
     if (!motion) root.classList.add('no-gsap');
 
-    const store = {
-      get(k) { try { return sessionStorage.getItem(k); } catch (_) { return null; } },
-      set(k, v) { try { sessionStorage.setItem(k, v); } catch (_) { /* ignore */ } },
-      del(k) { try { sessionStorage.removeItem(k); } catch (_) { /* ignore */ } },
-    };
-
     const header = $('.site-header');
     const locks = new Set();
     // Freeze page scrolling while an overlay (menu, drawer, lightbox) is open.
@@ -433,23 +427,15 @@
     });
 
     /* ------------------------------------------------------------------
-       Footer bits: year, live build stamp, test badge
+       Footer bits: year; the floating WhatsApp button steps aside at the
+       very bottom so it never covers the back-to-top ring
        ------------------------------------------------------------------ */
     $$('[data-year]').forEach((el) => { el.textContent = today.getFullYear(); });
-    const buildInfo = $('[data-build-info]');
-    if (buildInfo) {
-      fetch('version.json', { cache: 'no-store' })
-        .then((r) => (r.ok ? r.json() : Promise.reject(new Error(r.status))))
-        .then((v) => {
-          const built = new Date(v.built).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
-          buildInfo.textContent = `Build ${v.sha.slice(0, 7)} · ${built}`;
-          buildInfo.title = `${v.ref} @ ${v.sha}`;
-        })
-        .catch(() => { buildInfo.textContent = 'Local preview'; });
+    const floatWa = $('.float-wa');
+    const footBar = $('.f-bottom');
+    if (floatWa && footBar && 'IntersectionObserver' in window) {
+      new IntersectionObserver(([entry]) => floatWa.classList.toggle('is-away', entry.isIntersecting)).observe(footBar);
     }
-    const badge = $('#test-badge');
-    if (store.get('pharo-hide-badge') === '1') badge.hidden = true;
-    $('button', badge).addEventListener('click', () => { badge.hidden = true; store.set('pharo-hide-badge', '1'); });
 
     /* ------------------------------------------------------------------
        Without GSAP (or with reduced motion): static page, simple fallbacks
@@ -642,7 +628,7 @@
 
     /* ---------- Big photos drift inside their frames ---------- */
 
-    $$('.venue-row-media img, .exp-feature:not(.exp-feature--framed) .exp-media img, .ballroom-media img, .footer-cta-bg img, .testimonials-bg img, .stack-card img').forEach((img) => {
+    $$('.venue-row-media img, .exp-feature:not(.exp-feature--framed) .exp-media img, .ballroom-media img, .testimonials-bg img, .stack-card img').forEach((img) => {
       gsap.fromTo(img, { yPercent: -7, scale: 1.18 }, {
         yPercent: 7, ease: 'none',
         scrollTrigger: { trigger: img.parentElement, start: 'top bottom', end: 'bottom top', scrub: true },
@@ -697,10 +683,10 @@
       '.palace-copy > :not(.h2)', '.chamber-intro p', '.stats li', '.venues', '.btn-row', '.center-cta', '.bento-item',
       '.room-copy > :not(.h2)', '.venue-row-copy > :not(.h2)', '.cuisine', '.menu-cta-card', '.highlight', '.ballroom-card',
       '.occasion', '.steps li', '.enquiry', '.exp-card > :not(.h2)', '.place', '.value', '.group-list li', '.story-copy > :not(.h2)',
-      '.story-logo', '.c-card', '.contact-list li', '.map', '.faq details', '.rating', '.footer-main > *', '.footer-badges > *',
-      '.footer-crest-row > *',
+      '.story-logo', '.c-card', '.contact-list li', '.map', '.faq details', '.rating', '.f-arch', '.f-reserve-copy > :not(.footer-cta-title)',
+      '.f-brand > *', '.f-col', '.laurel', '.f-group',
       '.finale-copy .eyebrow', '.finale-copy .btn', '.finale-crown', '.filters', '.cta-band-inner > div:first-child > :not(.h2)',
-      '.footer-cta-inner > *', '.enquire-grid > div > :not(.h2):not(.enquire-media)', '.faq-grid > div > :not(.h2)',
+      '.enquire-grid > div > :not(.h2):not(.enquire-media)', '.faq-grid > div > :not(.h2)',
     ].join(','));
     gsap.set(fadeTargets, { opacity: 0, y: 40 });
     ScrollTrigger.batch(fadeTargets, {
