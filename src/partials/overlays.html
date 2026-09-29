@@ -1,0 +1,91 @@
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- Temple-gate intro (first page of a visit only) -->
+  <div class="gate" aria-hidden="true">
+    <div class="gate-door gate-door--l">
+      <div class="door-frame">
+        <div class="door-glyphs"><span>𓇳</span><span>𓅃</span><span>𓋹</span><span>𓆣</span><span>𓊽</span><span>𓂀</span><span>𓆸</span></div>
+        <span class="door-ring"></span>
+      </div>
+    </div>
+    <div class="gate-door gate-door--r">
+      <div class="door-frame">
+        <div class="door-glyphs"><span>𓆸</span><span>𓂀</span><span>𓊽</span><span>𓆣</span><span>𓋹</span><span>𓅃</span><span>𓇳</span></div>
+        <span class="door-ring"></span>
+      </div>
+    </div>
+    <div class="gate-center">
+      <img class="gate-crown" src="assets/img/real/pharo-crown.png" alt="" width="237" height="199">
+      <p class="gate-brand"><span>The</span>Ph<b>a</b>ro</p>
+      <svg class="gate-sun"><use href="#winged-sun"/></svg>
+      <p class="gate-count"><span id="gate-count">000</span></p>
+    </div>
+  </div>
+
+  <!-- Page-to-page transition curtain -->
+  <div class="curtain" aria-hidden="true">
+    <img class="curtain-crown" src="assets/img/real/pharo-crown.png" alt="" width="237" height="199">
+  </div>
+
+  <div class="cursor" aria-hidden="true"><span class="cursor-dot"></span><span class="cursor-ring"><em class="cursor-label"></em></span></div>
+  <div class="progress" aria-hidden="true"><span></span></div>
+
+  <!-- Booking drawer, opened by any [data-book] button -->
+  <div class="drawer" id="booking-drawer" aria-hidden="true">
+    <div class="drawer-scrim" data-close-drawer></div>
+    <aside class="drawer-panel" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+      <button class="drawer-close" type="button" data-close-drawer aria-label="Close booking panel">&times;</button>
+      <img class="drawer-crown" src="assets/img/real/pharo-crown.png" alt="" width="237" height="199">
+      <p class="eyebrow">Reservations</p>
+      <h2 class="drawer-title" id="drawer-title">Book your <em>royal stay</em></h2>
+      <p class="muted">Choose your dates and our team will confirm availability and rates on WhatsApp.</p>
+      <form class="book-form" data-book-form novalidate>
+        <div class="f-field"><label for="bk-in">Arrival</label><input type="date" id="bk-in" name="checkin" required></div>
+        <div class="f-field"><label for="bk-out">Departure</label><input type="date" id="bk-out" name="checkout" required></div>
+        <div class="f-field">
+          <label for="bk-guests">Guests</label>
+          <select id="bk-guests" name="guests">
+            <option value="1 guest">1 guest</option>
+            <option value="2 guests" selected>2 guests</option>
+            <option value="3 guests">3 guests</option>
+            <option value="4 guests">4 guests</option>
+            <option value="5+ guests">5+ guests</option>
+          </select>
+        </div>
+        <div class="f-field">
+          <label for="bk-room">Room</label>
+          <select id="bk-room" name="room">
+            <option>Any room</option>
+            <option>Deluxe King Room</option>
+            <option>Deluxe Balcony Room</option>
+            <option>Family Room</option>
+          </select>
+        </div>
+        <div class="f-field full"><label for="bk-name">Your name</label><input id="bk-name" name="name" autocomplete="name"></div>
+        <button class="btn btn-gold full" type="submit"><span>Check availability on WhatsApp</span></button>
+        <p class="f-status full" role="status" aria-live="polite"></p>
+      </form>
+      <div class="drawer-contact">
+        <a href="tel:+94706696663"><svg><use href="#i-phone"/></svg>+94 70 669 6663</a>
+        <a href="mailto:info@thepharo.lk"><svg><use href="#i-mail"/></svg>info@thepharo.lk</a>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" aria-hidden="true">
+    <button class="lightbox-btn lightbox-prev" type="button" aria-label="Previous photo">&#8249;</button>
+    <figure class="lightbox-figure"><img alt=""><figcaption></figcaption></figure>
+    <button class="lightbox-btn lightbox-next" type="button" aria-label="Next photo">&#8250;</button>
+    <button class="lightbox-close" type="button" aria-label="Close photo">&times;</button>
+  </div>
+
+  <a class="float-wa magnetic" href="https://wa.me/94706696663" target="_blank" rel="noopener" aria-label="Chat with The Pharo on WhatsApp">
+    <svg aria-hidden="true"><use href="#i-whatsapp"/></svg>
+  </a>
+
+  <aside class="test-badge" id="test-badge" aria-label="Test build notice">
+    <strong>TEST BUILD</strong>
+    <span>Some photos are stock images until real ones are added</span>
+    <button type="button" aria-label="Hide test build notice">&times;</button>
+  </aside>

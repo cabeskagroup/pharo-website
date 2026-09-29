@@ -30,10 +30,15 @@ jobs:
       - name: Configure Pages
         uses: actions/configure-pages@v6
 
+      - name: Build pages
+        # Regenerates the root *.html files from src/ (layout, header, footer, pages).
+        run: python3 tools/build.py
+
       - name: Assemble site
         run: |
           mkdir _site
-          tar --exclude=./.git --exclude=./.github --exclude=./_site --exclude=./README.md -cf - . | tar -xf - -C _site
+          tar --exclude=./.git --exclude=./.github --exclude=./_site --exclude=./README.md \
+              --exclude=./src --exclude=./tools -cf - . | tar -xf - -C _site
           # Build stamp shown in the site footer, so you can tell which commit is live.
           printf '{"sha":"%s","ref":"%s","built":"%s"}\n' \
             "$GITHUB_SHA" "$GITHUB_REF_NAME" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > _site/version.json

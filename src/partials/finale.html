@@ -1,0 +1,51 @@
+        <section class="finale">
+          <svg class="pyramids" viewBox="0 0 1600 700" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+            <defs>
+              <linearGradient id="py-sky" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#07070a"/>
+                <stop offset=".55" stop-color="#101c33"/>
+                <stop offset=".85" stop-color="#6b4a2c"/>
+                <stop offset="1" stop-color="#c9a45c"/>
+              </linearGradient>
+              <radialGradient id="py-sun">
+                <stop offset="0" stop-color="#ffe7b0"/>
+                <stop offset=".25" stop-color="#e8c47a" stop-opacity=".9"/>
+                <stop offset="1" stop-color="#c9a45c" stop-opacity="0"/>
+              </radialGradient>
+              <linearGradient id="py-lit" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#d9b56e"/>
+                <stop offset="1" stop-color="#7a5a2c"/>
+              </linearGradient>
+              <linearGradient id="py-dark" x1="1" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#5a4222"/>
+                <stop offset="1" stop-color="#1c150c"/>
+              </linearGradient>
+            </defs>
+            <rect width="1600" height="700" fill="url(#py-sky)"/>
+            <g class="py-stars" fill="#f3e3bd">
+              <circle cx="140" cy="80" r="1.4"/><circle cx="320" cy="150" r="1"/><circle cx="520" cy="60" r="1.6"/>
+              <circle cx="700" cy="120" r="1"/><circle cx="980" cy="70" r="1.4"/><circle cx="1150" cy="140" r="1"/>
+              <circle cx="1330" cy="60" r="1.6"/><circle cx="1480" cy="160" r="1.1"/><circle cx="240" cy="260" r="1"/>
+              <circle cx="1400" cy="260" r="1"/><circle cx="860" cy="30" r="1.2"/><circle cx="60" cy="200" r="1"/>
+            </g>
+            <g class="py-sun">
+              <circle cx="800" cy="360" r="260" fill="url(#py-sun)" opacity=".7"/>
+              <circle cx="800" cy="360" r="70" fill="#f6dca0"/>
+            </g>
+            <path d="M440 330 230 600h420z" fill="url(#py-lit)" opacity=".75"/>
+            <path d="M440 330 230 600h170z" fill="url(#py-dark)" opacity=".85"/>
+            <path d="M1215 380 1050 600h330z" fill="url(#py-lit)" opacity=".7"/>
+            <path d="M1215 380 1050 600h120z" fill="url(#py-dark)" opacity=".85"/>
+            <path d="M800 190 470 600h660z" fill="url(#py-lit)"/>
+            <path d="M800 190 470 600h390z" fill="url(#py-dark)"/>
+            <path class="py-edge" d="M470 600 800 190 1130 600M800 190 860 600" fill="none" stroke="#f0d69a" stroke-width="1.5" stroke-opacity=".7"/>
+            <path d="M0 610c200-40 420-40 640-8s520 30 960-22v120H0z" fill="#2a1f12"/>
+            <path d="M0 650c260-30 520-20 800 5s540 10 800-25v70H0z" fill="#171109"/>
+          </svg>
+          <div class="finale-copy">
+            <img class="finale-crown" src="assets/img/real/pharo-crown.png" alt="" width="237" height="199" loading="lazy">
+            <p class="eyebrow center">Your kingdom awaits</p>
+            <h2 class="finale-title" data-split>Enter <em>The Pharo</em></h2>
+            <button class="btn btn-gold magnetic" type="button" data-book><span>Reserve your stay</span></button>
+          </div>
+        </section>

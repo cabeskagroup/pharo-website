@@ -1,0 +1,16 @@
+        <section class="page-hero" id="top">
+          <div class="page-hero-media media">
+            <img src="{{ hero_image }}" alt="{{ hero_alt }}" fetchpriority="high">
+          </div>
+          <div class="page-hero-shade"></div>
+          <div class="page-hero-glyph" aria-hidden="true">{{ hero_glyph }}</div>
+          <div class="page-hero-inner">
+            <nav class="crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a><span aria-hidden="true">/</span><span aria-current="page">{{ title }}</span></nav>
+            <p class="eyebrow">{{ hero_eyebrow }}</p>
+            <h1 class="page-title">{{ hero_title }}</h1>
+            <p class="page-lead">{{ hero_lead }}</p>
+          </div>
+          <a class="scroll-cue" href="#intro" aria-label="Scroll down">
+            <span class="scroll-cue-line"></span><span class="scroll-cue-text">Scroll</span>
+          </a>
+        </section>

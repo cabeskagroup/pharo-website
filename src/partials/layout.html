@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ full_title }}</title>
+  <meta name="description" content="{{ description }}">
+  <!-- Test build: keep search engines out until launch. Remove this line to go public. -->
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#0b0a08">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="The Pharo, Nittambuwa">
+  <meta property="og:title" content="{{ full_title }}">
+  <meta property="og:description" content="{{ description }}">
+  <meta property="og:image" content="{{ og_image }}">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/img/real/pharo-crown.png">
+
+  <link rel="preconnect" href="https://images.unsplash.com">
+  <link rel="preload" href="assets/fonts/cinzel-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/manrope-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/pharo-glyphs.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/style.css">
+
+  <script>
+    // Runs before first paint: decide whether to show the gate intro or a page-transition curtain.
+    (function (d) {
+      d.classList.add('js');
+      try {
+        if (sessionStorage.getItem('pharo-gate-seen')) d.classList.add('gate-seen');
+        if (sessionStorage.getItem('pharo-nav')) d.classList.add('is-arriving');
+      } catch (e) { d.classList.add('gate-seen'); }
+    })(document.documentElement);
+  </script>
+  <script src="assets/vendor/gsap/gsap.min.js" defer></script>
+  <script src="assets/vendor/gsap/ScrollTrigger.min.js" defer></script>
+  <script src="assets/vendor/gsap/ScrollSmoother.min.js" defer></script>
+  <script src="assets/vendor/gsap/ScrollToPlugin.min.js" defer></script>
+  <script src="assets/vendor/gsap/SplitText.min.js" defer></script>
+  <script src="assets/vendor/gsap/DrawSVGPlugin.min.js" defer></script>
+  <script src="assets/vendor/gsap/Flip.min.js" defer></script>
+  <script src="assets/js/main.js" defer></script>
+</head>
+<body class="page-{{ page }} {{ body_class }}">
+  <!-- @include symbols -->
+  <!-- @include overlays -->
+  <!-- @include header -->
+
+  <div id="smooth-wrapper">
+    <div id="smooth-content">
+      <main id="main">
+<!-- @content -->
+      </main>
+      <!-- @include footer -->
+    </div>
+  </div>
+</body>
+</html>
