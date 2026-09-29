@@ -27,6 +27,8 @@ The header, footer, menu, booking drawer and other shared parts live once in `sr
 
 Don't edit the root `*.html` files directly; they're overwritten by the build. `python3 tools/build.py --check` tells you if they're out of date.
 
+The build adds a fingerprint to the stylesheet and script links (`style.css?v=…`), so visitors always get the matching CSS and JavaScript after a deploy, never a stale cached copy.
+
 ## Preview locally
 
 ```sh
@@ -49,7 +51,8 @@ Put the photo in `assets/img/` and replace the `https://images.unsplash.com/...`
 ## Animation and fallbacks
 
 - GSAP 3.15 with ScrollTrigger, ScrollSmoother, SplitText, DrawSVG, Flip and ScrollTo is in `assets/vendor/gsap/` (GSAP's free standard licence).
-- First visit: a temple-gate intro. Between pages: a gold curtain transition.
+- First visit to the home page: a temple-gate intro (about 3.5 seconds). Every other page load: a gold curtain lift. Both are timed in CSS, so they always clear even if a script is slow or fails.
+- Smooth scrolling is only used with a mouse; phones and tablets keep native scrolling.
 - Visitors with "reduce motion" turned on get a calm, static site; if scripts fail, every page still works.
 
 ## Fonts

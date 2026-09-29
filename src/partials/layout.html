@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-page="{{ page }}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -20,26 +20,33 @@
   <link rel="preload" href="assets/fonts/cinzel-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/manrope-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/pharo-glyphs.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/style.css?v={{ asset_version }}">
 
   <script>
-    // Runs before first paint: decide whether to show the gate intro or a page-transition curtain.
+    // Runs before first paint. First visit to the home page: temple-gate intro.
+    // Every other page load: the gold curtain lifts. Both are timed in CSS, so
+    // they always clear even if a script is slow or fails.
     (function (d) {
       d.classList.add('js');
-      try {
-        if (sessionStorage.getItem('pharo-gate-seen')) d.classList.add('gate-seen');
-        if (sessionStorage.getItem('pharo-nav')) d.classList.add('is-arriving');
-      } catch (e) { d.classList.add('gate-seen'); }
+      var seen = null;
+      try { seen = sessionStorage.getItem('pharo-gate-seen'); } catch (e) { seen = '1'; }
+      if (d.getAttribute('data-page') === 'index' && !seen) {
+        try { sessionStorage.setItem('pharo-gate-seen', '1'); } catch (e) { /* ignore */ }
+      } else {
+        d.classList.add('gate-seen', 'is-arriving');
+      }
+      // Safety net: never leave a cover on screen.
+      setTimeout(function () { d.classList.add('gate-seen'); d.classList.remove('is-arriving'); }, 6000);
     })(document.documentElement);
   </script>
-  <script src="assets/vendor/gsap/gsap.min.js" defer></script>
-  <script src="assets/vendor/gsap/ScrollTrigger.min.js" defer></script>
-  <script src="assets/vendor/gsap/ScrollSmoother.min.js" defer></script>
-  <script src="assets/vendor/gsap/ScrollToPlugin.min.js" defer></script>
-  <script src="assets/vendor/gsap/SplitText.min.js" defer></script>
-  <script src="assets/vendor/gsap/DrawSVGPlugin.min.js" defer></script>
-  <script src="assets/vendor/gsap/Flip.min.js" defer></script>
-  <script src="assets/js/main.js" defer></script>
+  <script src="assets/vendor/gsap/gsap.min.js?v=3.15.0" defer></script>
+  <script src="assets/vendor/gsap/ScrollTrigger.min.js?v=3.15.0" defer></script>
+  <script src="assets/vendor/gsap/ScrollSmoother.min.js?v=3.15.0" defer></script>
+  <script src="assets/vendor/gsap/ScrollToPlugin.min.js?v=3.15.0" defer></script>
+  <script src="assets/vendor/gsap/SplitText.min.js?v=3.15.0" defer></script>
+  <script src="assets/vendor/gsap/DrawSVGPlugin.min.js?v=3.15.0" defer></script>
+  <script src="assets/vendor/gsap/Flip.min.js?v=3.15.0" defer></script>
+  <script src="assets/js/main.js?v={{ asset_version }}" defer></script>
 </head>
 <body class="page-{{ page }} {{ body_class }}">
   <!-- @include symbols -->

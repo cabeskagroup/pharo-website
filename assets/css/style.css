@@ -228,10 +228,30 @@ img.img-failed { opacity: 0 !important; }
 
 /* ---------- Temple gate intro ---------- */
 
+/* The whole intro is timed in CSS (about 3.5s), so it always clears even if
+   scripts are slow or fail. GSAP only adds the hero animation behind it. */
 .gate { position: fixed; inset: 0; z-index: 1500; display: none; perspective: 2200px; }
-.js .gate { display: flex; animation: failsafe-hide .8s ease 9s forwards; }
+.js .gate { display: flex; animation: cover-hide .6s ease 3.3s forwards; }
 .gate-seen .gate { display: none; }
-@keyframes failsafe-hide { to { opacity: 0; visibility: hidden; } }
+@keyframes cover-hide { to { opacity: 0; visibility: hidden; } }
+.js .gate-door--l { animation: door-l 1.6s cubic-bezier(.77, 0, .18, 1) 2s forwards; }
+.js .gate-door--r { animation: door-r 1.6s cubic-bezier(.77, 0, .18, 1) 2s forwards; }
+@keyframes door-l { to { transform: rotateY(100deg); } }
+@keyframes door-r { to { transform: rotateY(-100deg); } }
+.js .gate-center { animation: gate-center-out .5s ease 1.75s forwards; }
+@keyframes gate-center-out { to { opacity: 0; transform: scale(.96); } }
+.js .gate-crown { animation: gate-rise 1.2s cubic-bezier(.19, 1, .22, 1) .05s both; }
+.js .gate-brand { animation: gate-brand 1.3s cubic-bezier(.19, 1, .22, 1) .2s both; }
+.js .gate-sun { animation: gate-wings 1.2s cubic-bezier(.77, 0, .18, 1) .3s both; }
+.js .door-glyphs { animation: gate-fade 1s ease .15s both; }
+@keyframes gate-rise { from { opacity: 0; transform: translateY(-24px) scale(.85); } }
+@keyframes gate-brand { from { opacity: 0; letter-spacing: .8em; } }
+@keyframes gate-wings { from { clip-path: inset(0 50% 0 50%); } to { clip-path: inset(0 0 0 0); } }
+@keyframes gate-fade { from { opacity: 0; } }
+.gate-line { display: block; width: 150px; height: 1px; overflow: hidden; background: rgba(201, 164, 92, .25); }
+.gate-line span { display: block; height: 100%; background: var(--gold-light); transform-origin: left; }
+.js .gate-line span { animation: gate-line 1.6s cubic-bezier(.65, 0, .35, 1) .1s both; }
+@keyframes gate-line { from { transform: scaleX(0); } }
 
 .gate-door {
   position: relative;
@@ -279,7 +299,6 @@ img.img-failed { opacity: 0 !important; }
 .gate-brand span { display: block; margin-bottom: 10px; font-size: .32em; letter-spacing: .6em; }
 .gate-brand b, .brand-word b { color: var(--red); font-weight: 500; }
 .gate-sun { width: min(220px, 60vw); height: 59px; color: var(--gold); }
-.gate-count { margin: 0; color: var(--muted); font-family: var(--font-display); font-size: .78rem; letter-spacing: .4em; }
 
 /* ---------- Page-to-page curtain ---------- */
 
@@ -297,7 +316,8 @@ img.img-failed { opacity: 0 !important; }
 }
 .curtain::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
 .curtain-crown { width: 64px; opacity: .9; }
-.is-arriving .curtain { visibility: visible; transform: scaleY(1); animation: failsafe-hide .5s ease 5s forwards; }
+.is-arriving .curtain { visibility: visible; transform: scaleY(1); transform-origin: 50% 0; animation: curtain-lift .95s cubic-bezier(.77, 0, .18, 1) .3s forwards; }
+@keyframes curtain-lift { to { transform: scaleY(0); visibility: hidden; } }
 
 /* ---------- Cursor, progress, floating buttons ---------- */
 
@@ -854,16 +874,6 @@ select option { background: var(--basalt); color: var(--sand); }
 .site-footer > .frieze { position: relative; }
 
 .footer-main { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1.1fr; gap: 50px; padding: 90px 0 60px; }
-.logo-plaque {
-  display: inline-block;
-  padding: 20px 26px;
-  border: 1px solid rgba(201, 164, 92, .6);
-  background: radial-gradient(ellipse at 50% 30%, #fffaf0, #efe4cf);
-  box-shadow: 0 0 0 6px var(--obsidian), 0 0 0 7px rgba(201, 164, 92, .35);
-}
-.logo-plaque img { width: 210px; }
-.logo-plaque--lg { padding: 40px 46px; }
-.logo-plaque--lg img { width: min(360px, 100%); }
 .footer-brand > p { margin: 30px 0 24px; color: var(--sand-dim); }
 .socials { display: flex; gap: 10px; }
 .socials a { display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid var(--line); border-radius: 50%; color: var(--gold-light); transition: background-color .3s, color .3s; }
@@ -1117,9 +1127,92 @@ a.badge:hover { border-color: var(--gold); }
 .map iframe { width: 100%; height: 100%; border: 0; filter: grayscale(1) sepia(.35) contrast(1.05); }
 @media (max-width: 900px) { .contact-grid { grid-template-columns: 1fr; } }
 
+/* ==========================================================================
+   Premium polish: soft corners, crest, refined footer, touch performance
+   ========================================================================== */
+
+:root { --radius: 22px; --radius-sm: 14px; }
+
+/* Buttons, chips and filters become pills */
+.btn, .chips li, .filter, .badge, .t-dot { border-radius: 999px; }
+.btn { padding-inline: 2.2rem; }
+.btn-sm { padding-inline: 1.5rem; }
+
+/* Every card and image frame gets soft corners */
+.chamber, .stack-card, .bento-item, .collage-frame, .rg-main, .rg-thumb, .cuisine, .menu-cta-card,
+.highlight figure, .occasion, .enquire-media, .m-item, .c-card, .enquiry, .ballroom-card, .exp-card,
+.map, .venue-stage, .palace-inset, .venue-row-media, .exp-feature--framed .exp-media, .reserve-form,
+.amenities, .places, .value-grid, .footer-cta, .kg-img, .menu-cta-card, .t-slider .t-track {
+  border-radius: var(--radius);
+}
+.chamber, .reserve-form, .amenities, .places, .value-grid, .footer-cta { overflow: hidden; }
+.chamber-media { border-radius: 0; }
+.collage-frame > img { border-radius: calc(var(--radius) - 10px); }
+.venue-frame { border-radius: calc(var(--radius) - 12px); }
+.enquiry::before { border-radius: calc(var(--radius) - 10px); }
+.lightbox-figure img { border-radius: var(--radius-sm); }
+.drawer-panel { border-radius: var(--radius) 0 0 var(--radius); }
+.palace-inset { border-width: 5px; }
+.menu-cta-card { box-shadow: 0 0 0 6px var(--papyrus), 0 0 0 7px rgba(156, 122, 60, .4), 0 30px 60px rgba(28, 23, 15, .18); }
+.rf-submit { margin: 10px; border-radius: 999px; }
+.rf-field:nth-last-of-type(1) { border-right: 0; }
+.venue-row-media { margin: clamp(14px, 2.4vw, 34px); min-height: 480px; }
+.stack-card, .chamber, .c-card, .bento-item, .occasion, .cuisine, .m-item { transition: transform .6s var(--ease), box-shadow .6s var(--ease), border-color .4s; }
+.chamber:hover, .c-card:hover { box-shadow: 0 24px 60px rgba(0, 0, 0, .45), 0 0 0 1px rgba(201, 164, 92, .45); }
+.bento-item:hover, .occasion:hover, .cuisine:hover { box-shadow: 0 24px 60px rgba(0, 0, 0, .4); }
+
+/* Crest: the real crown with the PHARO wordmark, used instead of a boxed logo */
+.crest { display: inline-flex; flex-direction: column; align-items: center; gap: 8px; color: var(--gold-light); text-align: center; text-decoration: none; }
+.crest-crown { width: 74px; filter: drop-shadow(0 0 22px rgba(232, 207, 152, .28)); }
+.crest-word { font-family: var(--font-display); font-size: clamp(2.2rem, 4.4vw, 3.2rem); font-weight: 500; letter-spacing: .16em; line-height: 1; text-transform: uppercase; margin-right: -.16em; }
+.crest-word b { color: var(--red); font-weight: 500; }
+.crest-the { display: block; margin: 0 -.5em 6px 0; font-size: .34em; letter-spacing: .5em; }
+.crest-rule { display: flex; align-items: center; gap: 14px; width: 100%; color: var(--muted); font-family: var(--font-body); font-size: .62rem; font-weight: 600; letter-spacing: .5em; text-transform: uppercase; }
+.crest-rule i { flex: 1; min-width: 28px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold)); }
+.crest-rule i:last-child { background: linear-gradient(90deg, var(--gold), transparent); }
+.crest--xl .crest-crown { width: 120px; }
+.crest--xl .crest-word { font-size: clamp(3rem, 7vw, 4.8rem); }
+.crest-medallion { display: grid; place-items: center; width: min(440px, 100%); aspect-ratio: 1; border: 1px solid var(--line); border-radius: 50%; background: radial-gradient(circle, rgba(201, 164, 92, .12), transparent 65%); box-shadow: inset 0 0 0 14px var(--obsidian), inset 0 0 0 15px rgba(201, 164, 92, .25); }
+
+/* Footer */
+.footer-cta { margin: clamp(40px, 6vw, 80px) var(--gutter) 0; }
+.footer-crest-row { display: flex; flex-direction: column; align-items: center; gap: 22px; padding: clamp(70px, 9vw, 110px) 0 60px; text-align: center; }
+.footer-crest-row > p { max-width: 520px; margin: 0; color: var(--sand-dim); }
+.site-footer .frieze { position: relative; opacity: .85; }
+.footer-main { grid-template-columns: repeat(4, 1fr); padding: 60px 0; border-top: 1px solid var(--line); }
+.footer-col .btn { margin-top: 18px; }
+.socials a { width: 46px; height: 46px; }
+@media (max-width: 960px) { .footer-main { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 560px) { .footer-main { grid-template-columns: 1fr; gap: 36px; } .footer-bottom { flex-direction: column; text-align: center; } }
+
+/* Touch devices: keep scrolling light and fast */
+@media (hover: none), (max-width: 760px) {
+  body::before { display: none; }
+  .site-header.is-scrolled { background: rgba(11, 10, 8, .97); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .reserve-form, .ballroom-card, .exp-card { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgba(18, 16, 12, .94); }
+  .hero-slide img, .marquee-track, .chambers-track { will-change: auto; }
+}
+
+/* Phones: comfortable spacing and sizes */
+@media (max-width: 600px) {
+  :root { --radius: 18px; }
+  .section { padding: 80px 0; }
+  .btn { padding: 1rem 1.6rem; }
+  .hero-cta .btn, .footer-cta-actions .btn { flex: 1 1 100%; }
+  .venue-row-media { margin: 14px 14px 0; min-height: 0; }
+  .ballroom, .exp-feature:not(.exp-feature--framed) { min-height: 0; padding: 40vh 0 20px; align-items: flex-end; }
+  .ballroom-card, .exp-card { margin: 0 14px; }
+  .ballroom::after, .exp-feature::after { background: linear-gradient(180deg, rgba(11, 10, 8, 0) 20%, rgba(11, 10, 8, .9) 70%); }
+  .stack-copy { padding: 26px 22px 30px; }
+  .footer-cta { margin-inline: 14px; }
+  .footer-cta-inner { gap: 26px; }
+  .crest--xl .crest-crown { width: 90px; }
+  .page-hero { min-height: 520px; height: 72vh; }
+}
+
 /* ---------- Reduced motion ---------- */
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
-  .curtain { display: none; }
+  .gate, .curtain { display: none !important; }
 }

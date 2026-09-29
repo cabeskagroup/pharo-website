@@ -19,6 +19,7 @@ Usage:
     python3 tools/build.py          build all pages
     python3 tools/build.py --check  exit 1 if the committed pages are out of date
 """
+import hashlib
 import pathlib
 import re
 import sys
@@ -31,6 +32,12 @@ VAR_RE = re.compile(r"\{\{\s*([\w-]+)\s*\}\}")
 NAV_RE = re.compile(r'data-nav="([\w-]+)"')
 
 PARTIALS = {p.stem: p.read_text(encoding="utf-8") for p in (SRC / "partials").glob("*.html")}
+
+# Fingerprint of the stylesheet and script, appended to their URLs (?v=...) so a
+# new deploy is never mixed with old copies cached by browsers.
+ASSET_VERSION = hashlib.sha1(
+    b"".join((ROOT / f).read_bytes() for f in ("assets/css/style.css", "assets/js/main.js"))
+).hexdigest()[:10]
 
 
 def expand_includes(text, depth=0):
@@ -74,6 +81,7 @@ def build_page(path):
         "nav": meta.get("nav", page),
         "body_class": meta.get("body_class", ""),
         "og_image": meta.get("og_image", "assets/img/real/palace.jpg"),
+        "asset_version": ASSET_VERSION,
         **meta,
     }
     ctx["full_title"] = ctx["title"] if page == "index" else f"{ctx['title']} — The Pharo, Nittambuwa"
