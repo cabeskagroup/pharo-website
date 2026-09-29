@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pharo Hotel — Seaside Stays</title>
+  <meta name="description" content="Pharo Hotel: sea-view rooms, a terrace restaurant and sunsets by the lighthouse. (Test build with placeholder content.)">
+  <!-- Test build: keep search engines out until real content is in. Remove before launch. -->
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#0f2a3d">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script>document.documentElement.classList.add('js');</script>
+  <script src="assets/js/main.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- ============ Header ============ -->
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="#top" aria-label="Pharo Hotel, back to top">
+        <svg viewBox="0 0 32 32" aria-hidden="true">
+          <path d="M13.5 7 3 4v6z M18.5 7 29 4v6z" fill="#f2b56b" opacity=".55"/>
+          <path d="M12.5 5 16 2l3.5 3z" fill="currentColor"/>
+          <rect x="13.5" y="5" width="5" height="4" fill="#f2b56b"/>
+          <rect x="12" y="9" width="8" height="2" rx=".5" fill="currentColor"/>
+          <path d="M13 11h6l1.5 17h-9z" fill="currentColor"/>
+          <path d="M12.47 17h7.06l.26 3h-7.58z" fill="#f2b56b"/>
+          <path d="M6 29h20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <span class="brand-name">Pharo<small>Hotel</small></span>
+      </a>
+
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-menu" aria-label="Open menu">
+        <span class="nav-toggle-bar"></span>
+      </button>
+
+      <nav id="nav-menu" class="nav-menu" aria-label="Main">
+        <a href="#about">About</a>
+        <a href="#rooms">Rooms</a>
+        <a href="#amenities">Amenities</a>
+        <a href="#dining">Dining</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#contact">Contact</a>
+        <a class="btn btn-small" href="#book">Book now</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ============ Hero ============ -->
+    <section class="hero" id="top">
+      <svg class="hero-art" viewBox="0 0 1600 900" preserveAspectRatio="xMaxYMid slice" aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#0c2233"/>
+            <stop offset=".3" stop-color="#1e4460"/>
+            <stop offset=".56" stop-color="#6b6a86"/>
+            <stop offset=".8" stop-color="#d98b62"/>
+            <stop offset=".93" stop-color="#f5b673"/>
+            <stop offset="1" stop-color="#fbd08e"/>
+          </linearGradient>
+          <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#2d5872"/>
+            <stop offset="1" stop-color="#0b1f2e"/>
+          </linearGradient>
+          <radialGradient id="sun-glow">
+            <stop offset="0" stop-color="#ffe2b0" stop-opacity=".9"/>
+            <stop offset=".35" stop-color="#ffc47e" stop-opacity=".35"/>
+            <stop offset="1" stop-color="#ffc47e" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="beam-left" x1="1" y1="0" x2="0" y2="0">
+            <stop offset="0" stop-color="#fff1c9" stop-opacity=".7"/>
+            <stop offset="1" stop-color="#fff1c9" stop-opacity="0"/>
+          </linearGradient>
+          <linearGradient id="beam-right" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#fff1c9" stop-opacity=".45"/>
+            <stop offset="1" stop-color="#fff1c9" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+
+        <!-- sky & stars -->
+        <rect width="1600" height="600" fill="url(#sky)"/>
+        <g fill="#fff">
+          <circle cx="120" cy="60" r="1.6" opacity=".7"/><circle cx="260" cy="120" r="1.2" opacity=".5"/>
+          <circle cx="420" cy="40" r="1.8" opacity=".8"/><circle cx="560" cy="150" r="1.2" opacity=".4"/>
+          <circle cx="700" cy="80" r="1.5" opacity=".6"/><circle cx="840" cy="30" r="1.2" opacity=".6"/>
+          <circle cx="980" cy="110" r="1.6" opacity=".5"/><circle cx="1120" cy="50" r="1.3" opacity=".7"/>
+          <circle cx="1260" cy="140" r="1.2" opacity=".4"/><circle cx="1400" cy="70" r="1.7" opacity=".7"/>
+          <circle cx="1520" cy="120" r="1.2" opacity=".5"/><circle cx="330" cy="210" r="1.1" opacity=".35"/>
+          <circle cx="1480" cy="220" r="1.1" opacity=".35"/><circle cx="1200" cy="230" r="1" opacity=".3"/>
+        </g>
+
+        <!-- sun -->
+        <circle cx="1060" cy="585" r="260" fill="url(#sun-glow)"/>
+        <circle cx="1060" cy="585" r="58" fill="#ffe0a8"/>
+
+        <!-- distant coast -->
+        <path d="M0 588C80 570 150 560 230 566c70 5 130 14 210 22z" fill="#5b4a60" opacity=".5"/>
+
+        <!-- sea -->
+        <rect y="585" width="1600" height="315" fill="url(#sea)"/>
+        <g fill="#ffd59a">
+          <rect x="1000" y="596" width="120" height="3" rx="1.5" opacity=".7"/>
+          <rect x="1015" y="608" width="90" height="3" rx="1.5" opacity=".6"/>
+          <rect x="990" y="622" width="140" height="3" rx="1.5" opacity=".5"/>
+          <rect x="1025" y="638" width="70" height="3" rx="1.5" opacity=".45"/>
+          <rect x="1005" y="656" width="110" height="3" rx="1.5" opacity=".35"/>
+          <rect x="1030" y="678" width="60" height="3" rx="1.5" opacity=".3"/>
+          <rect x="1010" y="702" width="100" height="3" rx="1.5" opacity=".22"/>
+          <rect x="1035" y="730" width="50" height="3" rx="1.5" opacity=".16"/>
+        </g>
+        <path d="M60 640h120M300 668h180M620 650h90M140 720h220M520 760h160M40 820h260M760 700h120M380 840h200M860 860h140M700 800h90"
+              stroke="#9cc3d8" stroke-opacity=".18" stroke-width="2" stroke-linecap="round"/>
+
+        <!-- sailboat -->
+        <g fill="#0b1c29">
+          <path d="M860 628h64l-9 10h-46z"/>
+          <path d="M894 626v-66l30 64z"/>
+          <path d="M889 624v-52l-22 52z" opacity=".85"/>
+        </g>
+
+        <!-- birds -->
+        <g stroke="#0c2233" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".65">
+          <path d="M860 250q10-8 20 0q10-8 20 0"/>
+          <path d="M915 225q8-6 16 0q8-6 16 0"/>
+          <path d="M820 205q7-5 14 0q7-5 14 0"/>
+        </g>
+
+        <!-- lighthouse beam -->
+        <g class="beam">
+          <path d="M1300 270 520 170v212l780-100z" fill="url(#beam-left)"/>
+          <path d="M1300 270 1640 225v100l-340-43z" fill="url(#beam-right)"/>
+        </g>
+        <circle class="lamp-glow" cx="1300" cy="276" r="42" fill="#fff1c9" opacity=".35"/>
+
+        <!-- lighthouse -->
+        <g>
+          <path d="M1282 300h36l10 215h-56z" fill="#efe6da"/>
+          <path d="M1279.67 350h40.66l1.16 25h-42.98zM1276.42 420h47.16l1.16 25h-49.48z" fill="#b4533a"/>
+          <path d="M1300 300h18l10 215h-28z" fill="#000" opacity=".14"/>
+          <rect x="1294" y="385" width="12" height="18" rx="6" fill="#2b3a46"/>
+          <rect x="1274" y="290" width="52" height="10" rx="2" fill="#21323f"/>
+          <rect x="1284" y="262" width="32" height="28" fill="#ffd27a"/>
+          <path d="M1293 262v28M1307 262v28" stroke="#21323f" stroke-width="2"/>
+          <path d="m1280 262 20-22 20 22z" fill="#21323f"/>
+          <path d="M1300 240v-10" stroke="#21323f" stroke-width="3" stroke-linecap="round"/>
+        </g>
+
+        <!-- hotel -->
+        <g>
+          <rect x="1420" y="402" width="170" height="90" fill="#16324a"/>
+          <rect x="1414" y="395" width="182" height="8" fill="#0f2638"/>
+          <g fill="#ffcf85">
+            <rect x="1435" y="418" width="12" height="16"/><rect x="1460" y="418" width="12" height="16" opacity=".35"/>
+            <rect x="1485" y="418" width="12" height="16"/><rect x="1510" y="418" width="12" height="16"/>
+            <rect x="1535" y="418" width="12" height="16" opacity=".35"/><rect x="1560" y="418" width="12" height="16"/>
+            <rect x="1435" y="450" width="12" height="16" opacity=".35"/><rect x="1460" y="450" width="12" height="16"/>
+            <rect x="1485" y="450" width="12" height="16"/><rect x="1510" y="450" width="12" height="16" opacity=".35"/>
+            <rect x="1535" y="450" width="12" height="16"/><rect x="1560" y="450" width="12" height="16"/>
+          </g>
+        </g>
+
+        <!-- palm -->
+        <g stroke="#0b1c29" stroke-width="5" fill="none" stroke-linecap="round">
+          <path d="M1404 484c-2-32-6-64-12-92"/>
+          <path d="M1392 392q-30-10-52 8M1392 392q-22-24-50-22M1392 392q6-30 30-38M1392 392q30-12 50 6M1392 392q24 4 34 30M1392 392q-18 6-26 32"/>
+        </g>
+
+        <!-- headland -->
+        <path d="M1080 900c30-140 90-260 160-340 40-45 90-74 150-80 70-6 140 0 210 12v408z" fill="#0b1c29"/>
+      </svg>
+
+      <div class="container hero-content">
+        <p class="eyebrow">Seaside hotel &amp; terrace restaurant</p>
+        <h1>Where the light <em>guides you home</em></h1>
+        <p class="lead">Sea-view rooms, slow breakfasts and sunsets from the terrace, a few steps from the old lighthouse.</p>
+        <div class="hero-actions">
+          <a class="btn" href="#rooms">Explore rooms</a>
+          <a class="btn btn-ghost" href="#contact">Contact us</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Quick booking ============ -->
+    <section class="booking-wrap" id="book" aria-label="Check availability">
+      <div class="container">
+        <form class="booking" id="booking-form" novalidate>
+          <div class="field">
+            <label for="checkin">Check-in</label>
+            <input type="date" id="checkin" name="checkin" required>
+          </div>
+          <div class="field">
+            <label for="checkout">Check-out</label>
+            <input type="date" id="checkout" name="checkout" required>
+          </div>
+          <div class="field">
+            <label for="guests">Guests</label>
+            <select id="guests" name="guests">
+              <option value="1">1 guest</option>
+              <option value="2" selected>2 guests</option>
+              <option value="3">3 guests</option>
+              <option value="4">4 guests</option>
+              <option value="5">5 guests</option>
+              <option value="6">6 guests</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="room">Room</label>
+            <select id="room" name="room">
+              <option>Any room</option>
+              <option>Garden Room</option>
+              <option>Deluxe Sea View</option>
+              <option>Family Suite</option>
+            </select>
+          </div>
+          <button class="btn" type="submit">Check availability</button>
+          <p class="form-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+
+    <!-- ============ About ============ -->
+    <section class="section" id="about">
+      <div class="container split">
+        <div class="reveal">
+          <p class="eyebrow">About Pharo</p>
+          <h2>A small hotel with a big view</h2>
+          <p class="lead">Pharo takes its name from the lighthouse on the headland: a landmark that has welcomed travellers for generations.</p>
+          <p class="muted">We keep things simple. Bright rooms that open to the sea, a kitchen that cooks with what the market brings in, and a team that remembers how you take your coffee. Come for the view, stay for the quiet.</p>
+          <ul class="stats">
+            <li><strong>24</strong><span>Rooms &amp; suites</span></li>
+            <li><strong>5 min</strong><span>Walk to the beach</span></li>
+            <li><strong>24/7</strong><span>Front desk</span></li>
+          </ul>
+        </div>
+        <div class="ph ph-sunset about-photo reveal" role="img" aria-label="Photo placeholder: hotel exterior">
+          <span>Hotel exterior photo</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Rooms ============ -->
+    <section class="section section-white" id="rooms">
+      <div class="container">
+        <div class="section-head center reveal">
+          <p class="eyebrow">Rooms &amp; suites</p>
+          <h2>Rest easy, wake up to the sea</h2>
+          <p class="muted">Every room has air conditioning, fast Wi-Fi, a rain shower and breakfast included.</p>
+        </div>
+
+        <div class="cards">
+          <article class="card reveal">
+            <div class="ph ph-garden" role="img" aria-label="Photo placeholder: Garden Room"><span>Room photo</span></div>
+            <div class="card-body">
+              <h3>Garden Room</h3>
+              <ul class="room-meta">
+                <li>22 m²</li><li>Queen bed</li><li>Garden view</li>
+              </ul>
+              <p class="muted">A calm, shaded room that opens onto the palm garden. Ideal for solo travellers and couples.</p>
+              <div class="card-foot">
+                <p class="price"><strong>$89</strong> / night</p>
+                <a class="btn btn-outline btn-small" href="#contact" data-room="Garden Room">Enquire</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="card reveal">
+            <div class="ph ph-sea" role="img" aria-label="Photo placeholder: Deluxe Sea View room">
+              <span>Room photo</span>
+              <em class="card-tag">Most popular</em>
+            </div>
+            <div class="card-body">
+              <h3>Deluxe Sea View</h3>
+              <ul class="room-meta">
+                <li>30 m²</li><li>King bed</li><li>Private balcony</li>
+              </ul>
+              <p class="muted">Floor-to-ceiling windows, a balcony facing the sunset and the sound of the waves at night.</p>
+              <div class="card-foot">
+                <p class="price"><strong>$129</strong> / night</p>
+                <a class="btn btn-outline btn-small" href="#contact" data-room="Deluxe Sea View">Enquire</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="card reveal">
+            <div class="ph ph-sand" role="img" aria-label="Photo placeholder: Family Suite"><span>Room photo</span></div>
+            <div class="card-body">
+              <h3>Family Suite</h3>
+              <ul class="room-meta">
+                <li>45 m²</li><li>2 bedrooms</li><li>Sleeps 4</li>
+              </ul>
+              <p class="muted">Two connected bedrooms and a lounge corner, with space for the whole family to spread out.</p>
+              <div class="card-foot">
+                <p class="price"><strong>$189</strong> / night</p>
+                <a class="btn btn-outline btn-small" href="#contact" data-room="Family Suite">Enquire</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Amenities ============ -->
+    <section class="section" id="amenities">
+      <div class="container">
+        <div class="section-head center reveal">
+          <p class="eyebrow">Amenities</p>
+          <h2>Everything you need, nothing you don't</h2>
+        </div>
+
+        <div class="amenities">
+          <div class="amenity reveal">
+            <span class="icon"><svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg></span>
+            <h3>Free Wi-Fi</h3>
+            <p>Fast fibre in every room and on the terrace.</p>
+          </div>
+          <div class="amenity reveal">
+            <span class="icon"><svg viewBox="0 0 24 24"><path d="M8 14V5a2 2 0 0 1 4 0M14 14V5a2 2 0 0 1 4 0M8 8h6M8 11h6M2 18c2 0 2-1.5 4-1.5s2 1.5 4 1.5 2-1.5 4-1.5 2 1.5 4 1.5 2-1.5 4-1.5M2 22c2 0 2-1.5 4-1.5s2 1.5 4 1.5 2-1.5 4-1.5 2 1.5 4 1.5 2-1.5 4-1.5"/></svg></span>
+            <h3>Outdoor pool</h3>
+            <p>Infinity-edge pool with loungers and towels.</p>
+          </div>
+          <div class="amenity reveal">
+            <span class="icon"><svg viewBox="0 0 24 24"><path d="M7 2v20M4 2v6a3 3 0 0 0 6 0V2M17 22V2c-2.5 1.5-4 4-4 8h4"/></svg></span>
+            <h3>Restaurant &amp; bar</h3>
+            <p>Fresh local food from breakfast to late dinner.</p>
+          </div>
+          <div class="amenity reveal">
+            <span class="icon"><svg viewBox="0 0 24 24"><path d="M12 4c2 2.5 2 7 0 10-2-3-2-7.5 0-10zM12 14c-3 0-6-2-7-6 3 0 5.5 1.5 7 6zM12 14c3 0 6-2 7-6-3 0-5.5 1.5-7 6zM6 18c2 1.3 4 2 6 2s4-.7 6-2"/></svg></span>
+            <h3>Spa &amp; wellness</h3>
+            <p>Massages, yoga deck and a quiet reading room.</p>
+          </div>
+          <div class="amenity reveal">
+            <span class="icon"><svg viewBox="0 0 24 24"><path d="M23 12a11.05 11.05 0 0 0-22 0zm-5 7a3 3 0 0 1-6 0v-7"/></svg></span>
+            <h3>Beach access</h3>
+            <p>A short path down to a sandy, swimmable bay.</p>
+          </div>
+          <div class="amenity reveal">
+            <span class="icon"><svg viewBox="0 0 24 24"><path d="M4 16v-4l2-5h12l2 5v4zM4 12h16"/><circle cx="7.5" cy="16.5" r="1.5"/><circle cx="16.5" cy="16.5" r="1.5"/></svg></span>
+            <h3>Airport transfers</h3>
+            <p>Private pick-up and drop-off on request.</p>
+          </div>
+          <div class="amenity reveal">
+            <span class="icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 17V7h4a3 3 0 0 1 0 6H9"/></svg></span>
+            <h3>Free parking</h3>
+            <p>Secure on-site parking for all guests.</p>
+          </div>
+          <div class="amenity reveal">
+            <span class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span>
+            <h3>24-hour front desk</h3>
+            <p>Late arrival? Someone is always here to help.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Dining ============ -->
+    <section class="section section-dark" id="dining">
+      <div class="container split reverse">
+        <div class="reveal">
+          <p class="eyebrow">Dining</p>
+          <h2>The Lantern terrace</h2>
+          <p class="lead">Grilled catch of the day, garden salads and slow-cooked curries, served on a terrace that catches the last of the sun.</p>
+          <ul class="hours">
+            <li><span>Breakfast</span><span>7:00 – 10:30</span></li>
+            <li><span>Lunch</span><span>12:00 – 15:00</span></li>
+            <li><span>Dinner</span><span>18:30 – 22:30</span></li>
+            <li><span>Sunset bar</span><span>17:00 – late</span></li>
+          </ul>
+          <a class="btn btn-ghost" href="#contact">Reserve a table</a>
+        </div>
+        <div class="ph ph-night about-photo reveal" role="img" aria-label="Photo placeholder: restaurant terrace">
+          <span>Restaurant photo</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Gallery ============ -->
+    <section class="section" id="gallery">
+      <div class="container">
+        <div class="section-head center reveal">
+          <p class="eyebrow">Gallery</p>
+          <h2>A look around</h2>
+          <p class="muted">Placeholder tiles. Drop your own photos into <code>assets/img/</code> and swap them in.</p>
+        </div>
+
+        <div class="gallery reveal">
+          <div class="ph ph-sunset wide tall" role="img" aria-label="Photo placeholder: lobby"><span>Lobby</span></div>
+          <div class="ph ph-sea" role="img" aria-label="Photo placeholder: pool"><span>Pool</span></div>
+          <div class="ph ph-garden" role="img" aria-label="Photo placeholder: garden"><span>Garden</span></div>
+          <div class="ph ph-sand" role="img" aria-label="Photo placeholder: breakfast"><span>Breakfast</span></div>
+          <div class="ph ph-terracotta" role="img" aria-label="Photo placeholder: spa"><span>Spa</span></div>
+          <div class="ph ph-night wide" role="img" aria-label="Photo placeholder: terrace at night"><span>Terrace at night</span></div>
+          <div class="ph ph-sea-light wide" role="img" aria-label="Photo placeholder: beach"><span>Beach</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Contact ============ -->
+    <section class="section section-white" id="contact">
+      <div class="container contact-grid">
+        <div class="reveal">
+          <p class="eyebrow">Contact</p>
+          <h2>Plan your stay</h2>
+          <p class="muted">Send us your dates and we'll reply within a day with availability and the best rate.</p>
+
+          <ul class="contact-list">
+            <li>
+              <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <div><strong>Address</strong><br>123 Harbour Road, Your City, Country</div>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              <div><strong>Phone</strong><br><a href="tel:+000000000000">+00 00 000 0000</a></div>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="m22 6-10 7L2 6"/></svg>
+              <div><strong>Email</strong><br><a href="mailto:hello@example.com">hello@example.com</a></div>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              <div><strong>Check-in / check-out</strong><br>From 14:00 / until 11:00</div>
+            </li>
+          </ul>
+
+          <div class="ph ph-sea-light map-ph" role="img" aria-label="Map placeholder"><span>Map embed goes here</span></div>
+        </div>
+
+        <div class="form-card reveal">
+          <h3>Send an enquiry</h3>
+          <form id="contact-form" class="form-grid" novalidate>
+            <div class="field">
+              <label for="c-name">Full name</label>
+              <input id="c-name" name="name" type="text" autocomplete="name" required>
+            </div>
+            <div class="field">
+              <label for="c-email">Email</label>
+              <input id="c-email" name="email" type="email" autocomplete="email" required>
+            </div>
+            <div class="field">
+              <label for="c-checkin">Check-in</label>
+              <input id="c-checkin" name="checkin" type="date">
+            </div>
+            <div class="field">
+              <label for="c-checkout">Check-out</label>
+              <input id="c-checkout" name="checkout" type="date">
+            </div>
+            <div class="field">
+              <label for="c-room">Room</label>
+              <select id="c-room" name="room">
+                <option>Any room</option>
+                <option>Garden Room</option>
+                <option>Deluxe Sea View</option>
+                <option>Family Suite</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="c-guests">Guests</label>
+              <select id="c-guests" name="guests">
+                <option value="1">1 guest</option>
+                <option value="2" selected>2 guests</option>
+                <option value="3">3 guests</option>
+                <option value="4">4 guests</option>
+                <option value="5">5 guests</option>
+                <option value="6">6 guests</option>
+              </select>
+            </div>
+            <div class="field full">
+              <label for="c-message">Message</label>
+              <textarea id="c-message" name="message" rows="5" placeholder="Anything we should know? Late arrival, dietary needs, special occasion…"></textarea>
+            </div>
+            <div class="full">
+              <button class="btn" type="submit">Send enquiry</button>
+              <p class="form-note">Test form: nothing is sent yet. Connect it to a form service or backend before launch.</p>
+            </div>
+            <p class="form-status full" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ Footer ============ -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <p class="brand-name">Pharo<small>Hotel</small></p>
+          <p>Seaside rooms, a terrace restaurant and the best sunset on the coast.</p>
+        </div>
+        <div>
+          <h4>Explore</h4>
+          <ul>
+            <li><a href="#rooms">Rooms</a></li>
+            <li><a href="#amenities">Amenities</a></li>
+            <li><a href="#dining">Dining</a></li>
+            <li><a href="#gallery">Gallery</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Contact</h4>
+          <ul>
+            <li>123 Harbour Road</li>
+            <li><a href="tel:+000000000000">+00 00 000 0000</a></li>
+            <li><a href="mailto:hello@example.com">hello@example.com</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; <span id="year">2026</span> Pharo Hotel. All rights reserved.</p>
+        <p class="build-info" id="build-info">Local preview</p>
+      </div>
+    </div>
+  </footer>
+
+  <aside class="test-badge" id="test-badge" aria-label="Test build notice">
+    <strong>TEST BUILD</strong>
+    <span>Names, prices &amp; contacts are placeholders</span>
+    <button type="button" aria-label="Hide test build notice">&times;</button>
+  </aside>
+</body>
+</html>
