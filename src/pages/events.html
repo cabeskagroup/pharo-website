@@ -69,12 +69,99 @@ hero_lead: Two ballrooms of 350 guests each, a rooftop made for parties and a ba
               <h2 class="h2" data-split>Every reason <em>to gather</em></h2>
             </div>
             <div class="occasion-grid">
-              <a class="occasion media" href="#enquire"><img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=1000&q=80" alt="Wedding celebration" loading="lazy"><span><em>01</em>Weddings</span></a>
-              <a class="occasion media" href="#enquire"><img src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&w=1000&q=80" alt="A couple's hands with wedding rings" loading="lazy"><span><em>02</em>Homecomings &amp; engagements</span></a>
-              <a class="occasion media" href="#enquire"><img src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=1000&q=80" alt="Friends celebrating together" loading="lazy"><span><em>03</em>Birthdays</span></a>
-              <a class="occasion media" href="#enquire"><img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1000&q=80" alt="A conference hall with a stage" loading="lazy"><span><em>04</em>Corporate events</span></a>
+              <a class="occasion media" href="#planner" data-occasion="A wedding"><img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=1000&q=80" alt="Wedding celebration" loading="lazy"><span><em>01</em>Weddings</span></a>
+              <a class="occasion media" href="#planner" data-occasion="A homecoming or engagement"><img src="https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&w=1000&q=80" alt="A couple's hands with wedding rings" loading="lazy"><span><em>02</em>Homecomings &amp; engagements</span></a>
+              <a class="occasion media" href="#planner" data-occasion="A birthday party"><img src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=1000&q=80" alt="Friends celebrating together" loading="lazy"><span><em>03</em>Birthdays</span></a>
+              <a class="occasion media" href="#planner" data-occasion="A corporate event"><img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1000&q=80" alt="A conference hall with a stage" loading="lazy"><span><em>04</em>Corporate events</span></a>
             </div>
           </div>
+        </section>
+
+        <!-- Event planner: pick a date, then send it on WhatsApp or carry it into the enquiry form -->
+        <section class="section planner" id="planner">
+          <div class="container">
+            <div class="section-head center">
+              <p class="eyebrow center">Event planner</p>
+              <h2 class="h2" data-split>Choose <em>your date</em></h2>
+              <p class="muted">Pick a day, tell us a little about your celebration and we'll confirm availability.</p>
+            </div>
+            <div class="planner-grid" data-planner>
+              <div class="cal">
+                <div class="cal-head">
+                  <button class="cal-nav cal-nav--prev" type="button" data-cal-prev aria-label="Previous month"><svg aria-hidden="true"><use href="#i-arrow"/></svg></button>
+                  <p class="cal-month" data-cal-month aria-live="polite"></p>
+                  <button class="cal-nav" type="button" data-cal-next aria-label="Next month"><svg aria-hidden="true"><use href="#i-arrow"/></svg></button>
+                </div>
+                <div class="cal-week" aria-hidden="true"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
+                <div class="cal-grid" data-cal-grid></div>
+                <ul class="cal-legend">
+                  <li><i class="is-today"></i>Today</li>
+                  <li><i class="is-weekend"></i>Weekend</li>
+                  <li><i class="is-poya"></i>Poya (full moon) day</li>
+                  <li data-legend-booked hidden><i class="is-booked"></i>Booked</li>
+                </ul>
+                <noscript><p class="muted">Turn on JavaScript to use the calendar, or send your date with the enquiry form below.</p></noscript>
+              </div>
+
+              <form class="planner-panel" data-planner-form novalidate>
+                <p class="eyebrow">Your event</p>
+                <p class="planner-date" data-planner-date>Pick a date</p>
+                <p class="planner-note" data-planner-note>Choose a day on the calendar to begin.</p>
+                <fieldset class="planner-field">
+                  <legend>Occasion</legend>
+                  <div class="planner-chips">
+                    <label><input type="radio" name="occasion" value="A wedding" checked><span>Wedding</span></label>
+                    <label><input type="radio" name="occasion" value="A homecoming or engagement"><span>Homecoming</span></label>
+                    <label><input type="radio" name="occasion" value="A birthday party"><span>Birthday</span></label>
+                    <label><input type="radio" name="occasion" value="A get-together"><span>Get-together</span></label>
+                    <label><input type="radio" name="occasion" value="A corporate event"><span>Corporate</span></label>
+                  </div>
+                </fieldset>
+                <fieldset class="planner-field">
+                  <legend>Time of day</legend>
+                  <div class="planner-chips">
+                    <label><input type="radio" name="session" value="Lunch"><span>Lunch</span></label>
+                    <label><input type="radio" name="session" value="Evening" checked><span>Evening</span></label>
+                  </div>
+                </fieldset>
+                <fieldset class="planner-field">
+                  <legend>Venue</legend>
+                  <div class="planner-chips">
+                    <label><input type="radio" name="venue" value="The Grand Ballroom"><span>Grand Ballroom</span></label>
+                    <label><input type="radio" name="venue" value="The Lavender Ballroom"><span>Lavender Ballroom</span></label>
+                    <label><input type="radio" name="venue" value="Rooftop &amp; Sky Lounge"><span>Rooftop</span></label>
+                    <label><input type="radio" name="venue" value="Not sure yet" checked><span>Not sure</span></label>
+                  </div>
+                </fieldset>
+                <div class="planner-field planner-guests">
+                  <label for="pl-guests"><span>Guests</span><output for="pl-guests" data-planner-guests>About 150</output></label>
+                  <input id="pl-guests" name="guests" type="range" min="20" max="350" step="10" value="150">
+                  <div class="planner-scale" aria-hidden="true"><span>20</span><span>350</span></div>
+                </div>
+                <div class="planner-actions">
+                  <button class="btn btn-gold" type="submit"><span>Check on WhatsApp</span></button>
+                  <button class="btn btn-line" type="button" data-planner-continue><span>Add to my enquiry</span></button>
+                </div>
+                <p class="f-status" role="status" aria-live="polite"></p>
+              </form>
+            </div>
+          </div>
+          <!--
+            Calendar data. "booked": dates that are fully booked (YYYY-MM-DD), shown struck through.
+            "poya": Full Moon Poya days (public holidays; no alcohol is served), from the
+            government's 2026 and 2027 holiday gazettes. Add each new year's dates when they're published.
+          -->
+          <script type="application/json" id="planner-data">
+            {
+              "booked": [],
+              "poya": [
+                "2026-01-03", "2026-02-01", "2026-03-02", "2026-04-01", "2026-05-01", "2026-05-30", "2026-06-29",
+                "2026-07-29", "2026-08-27", "2026-09-26", "2026-10-25", "2026-11-24", "2026-12-23",
+                "2027-01-22", "2027-02-20", "2027-03-22", "2027-04-20", "2027-05-19", "2027-06-18",
+                "2027-07-18", "2027-08-16", "2027-09-15", "2027-10-15", "2027-11-13", "2027-12-13"
+              ]
+            }
+          </script>
         </section>
 
         <section class="section steps-section">

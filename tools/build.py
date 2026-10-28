@@ -15,6 +15,9 @@ Inside any page or partial:
     <!-- @include name -->   inserts src/partials/name.html
     {{ key }}                inserts a metadata value (title, description, page, ...)
 
+Optional metadata: nav (which menu link is current), body_class, og_image,
+scripts (extra vendor scripts, e.g. "scripts: page-flip").
+
 Usage:
     python3 tools/build.py          build all pages
     python3 tools/build.py --check  exit 1 if the committed pages are out of date
@@ -32,6 +35,11 @@ VAR_RE = re.compile(r"\{\{\s*([\w-]+)\s*\}\}")
 NAV_RE = re.compile(r'data-nav="([\w-]+)"')
 
 PARTIALS = {p.stem: p.read_text(encoding="utf-8") for p in (SRC / "partials").glob("*.html")}
+
+# Extra scripts a page can ask for with "scripts: name" in its metadata.
+PAGE_SCRIPTS = {
+    "page-flip": "assets/vendor/page-flip/page-flip.browser.js?v=2.0.7",
+}
 
 # Fingerprint of the stylesheet and script, appended to their URLs (?v=...) so a
 # new deploy is never mixed with old copies cached by browsers.
@@ -84,6 +92,9 @@ def build_page(path):
         "asset_version": ASSET_VERSION,
         **meta,
     }
+    ctx["page_scripts"] = "".join(
+        f'<script src="{PAGE_SCRIPTS[name]}" defer></script>\n  ' for name in meta.get("scripts", "").split()
+    )
     ctx["full_title"] = ctx["title"] if page == "index" else f"{ctx['title']} — The Pharo, Nittambuwa"
 
     layout = expand_includes(PARTIALS["layout"])

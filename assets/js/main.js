@@ -438,6 +438,236 @@
     }
 
     /* ------------------------------------------------------------------
+       Menu book (menu page): StPageFlip turns the pages
+       ------------------------------------------------------------------ */
+    const bookEl = $('#flipbook');
+    if (bookEl && window.St && window.St.PageFlip) {
+      const pages = $$('.fb-page', bookEl);
+      const last = pages.length - 1;
+      const countEl = $('[data-fb-count]');
+      const totalEl = $('.fb-count-total');
+      const prevBtn = $('[data-fb-prev]');
+      const nextBtn = $('[data-fb-next]');
+      const chips = $$('.fb-chip');
+      $('[data-fb-total]').textContent = last - 1;
+
+      const book = new window.St.PageFlip(bookEl, {
+        width: 500,
+        height: 700,
+        size: 'stretch',
+        minWidth: 260,
+        maxWidth: 560,
+        minHeight: 364,
+        maxHeight: 784,
+        showCover: true,
+        usePortrait: true,
+        mobileScrollSupport: true,
+        maxShadowOpacity: 0.45,
+        flippingTime: reduceMotion ? 250 : 900,
+      });
+
+      const update = () => {
+        const i = book.getCurrentPageIndex();
+        const spread = book.getOrientation() === 'landscape' && i > 0 && i < last;
+        const lastShown = spread ? Math.min(i + 1, last - 1) : i;
+        const isCover = i === 0 || i === last;
+        countEl.textContent = i === 0 ? 'Cover' : i === last ? 'Back cover' : lastShown > i ? `Pages ${i}–${lastShown}` : `Page ${i}`;
+        totalEl.hidden = isCover;
+        prevBtn.disabled = i === 0;
+        nextBtn.disabled = i >= last || (spread && i + 1 >= last);
+        let active = null;
+        chips.forEach((c) => { if (Number(c.dataset.fbGoto) <= lastShown) active = c; });
+        chips.forEach((c) => c.classList.toggle('is-active', c === active));
+      };
+      let refreshTimer = 0;
+      const refreshLayout = () => {
+        update();
+        clearTimeout(refreshTimer);
+        refreshTimer = setTimeout(() => window.ScrollTrigger && window.ScrollTrigger.refresh(), 200);
+      };
+      book.on('init', refreshLayout);
+      book.on('flip', update);
+      book.on('changeOrientation', refreshLayout);
+      book.loadFromHTML(pages);
+      bookEl.classList.add('is-ready');
+
+      prevBtn.addEventListener('click', () => book.flipPrev());
+      nextBtn.addEventListener('click', () => book.flipNext());
+      // Chapter chips and the contents page (delegated: portrait mode clones pages)
+      document.addEventListener('click', (e) => {
+        const go = e.target.closest('[data-fb-goto]');
+        if (!go) return;
+        e.preventDefault();
+        const n = Number(go.dataset.fbGoto);
+        if (n !== book.getCurrentPageIndex()) book.flip(n);
+      });
+      document.addEventListener('keydown', (e) => {
+        if (locks.size || e.altKey || e.ctrlKey || e.metaKey || /^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)) return;
+        if (e.key === 'ArrowRight') book.flipNext();
+        else if (e.key === 'ArrowLeft') book.flipPrev();
+      });
+    }
+
+    /* ------------------------------------------------------------------
+       Event planner (events page): pick a date on the calendar, then send it
+       on WhatsApp or carry it into the enquiry form
+       ------------------------------------------------------------------ */
+    const planner = $('[data-planner]');
+    if (planner) {
+      let data = { booked: [], poya: [] };
+      try { data = Object.assign(data, JSON.parse($('#planner-data').textContent)); } catch (_) { /* keep defaults */ }
+      const booked = new Set(data.booked);
+      const poya = new Set(data.poya);
+      const grid = $('[data-cal-grid]', planner);
+      const monthEl = $('[data-cal-month]', planner);
+      const prevMonth = $('[data-cal-prev]', planner);
+      const nextMonth = $('[data-cal-next]', planner);
+      const form = $('[data-planner-form]', planner);
+      const dateEl = $('[data-planner-date]', form);
+      const noteEl = $('[data-planner-note]', form);
+      const status = $('.f-status', form);
+      const guests = form.elements.guests;
+      const guestsOut = $('[data-planner-guests]', form);
+      $('[data-legend-booked]', planner).hidden = booked.size === 0;
+
+      const MONTHS_AHEAD = 24;
+      const todayKey = toInput(today);
+      const firstMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+      const monthsFrom = (d) => (d.getFullYear() - firstMonth.getFullYear()) * 12 + d.getMonth() - firstMonth.getMonth();
+      const longDate = (d) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+      const weekday = (d) => d.toLocaleDateString('en-GB', { weekday: 'long' });
+      let view = new Date(firstMonth);
+      let selected = null;
+      let focusKey = todayKey;
+
+      function render() {
+        monthEl.textContent = view.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+        const y = view.getFullYear();
+        const m = view.getMonth();
+        const lead = (new Date(y, m, 1).getDay() + 6) % 7; // weeks start on Monday
+        const days = new Date(y, m + 1, 0).getDate();
+        let html = '<span class="cal-day is-blank" aria-hidden="true"></span>'.repeat(lead);
+        for (let d = 1; d <= days; d++) {
+          const date = new Date(y, m, d);
+          const key = toInput(date);
+          const cls = ['cal-day'];
+          const label = [`${weekday(date)} ${longDate(date)}`];
+          if (date.getDay() === 0 || date.getDay() === 6) cls.push('is-weekend');
+          if (key === todayKey) { cls.push('is-today'); label.push('today'); }
+          if (poya.has(key)) { cls.push('is-poya'); label.push('Poya day'); }
+          if (booked.has(key)) { cls.push('is-booked'); label.push('booked'); }
+          if (key === selected) cls.push('is-selected');
+          const off = key < todayKey || booked.has(key);
+          html += `<button type="button" class="${cls.join(' ')}" data-date="${key}" aria-label="${label.join(', ')}" aria-pressed="${key === selected}" tabindex="-1"${off ? ' disabled' : ''}>${d}</button>`;
+        }
+        grid.innerHTML = html;
+        prevMonth.disabled = monthsFrom(view) <= 0;
+        nextMonth.disabled = monthsFrom(view) >= MONTHS_AHEAD;
+        const tab = $(`[data-date="${focusKey}"]:not(:disabled)`, grid) || $('button.cal-day:not(:disabled)', grid);
+        if (tab) tab.tabIndex = 0;
+      }
+
+      function noteFor(date, key) {
+        const days = Math.round((date - parse(todayKey)) / 86400000);
+        const away = days === 0 ? 'That’s today' : days === 1 ? 'That’s tomorrow' : `That’s ${days} days away`;
+        if (poya.has(key)) return [`Full moon Poya day: a public holiday, and alcohol isn’t served. ${away}.`, 'is-poya'];
+        if (days < 14) return [`${away}. For short-notice events, call us on ${PHONE}.`, 'is-soon'];
+        if (date.getDay() === 0 || date.getDay() === 6) return [`${away}. Weekend dates book up first, so it’s worth enquiring early.`, ''];
+        return [`${away}.`, ''];
+      }
+
+      function select(key) {
+        selected = key;
+        focusKey = key;
+        const date = parse(key);
+        render();
+        const btn = $(`[data-date="${key}"]`, grid);
+        if (btn) btn.focus({ preventScroll: true });
+        dateEl.innerHTML = `<em>${weekday(date)}</em>${longDate(date)}`;
+        const [note, tone] = noteFor(date, key);
+        noteEl.textContent = note;
+        noteEl.className = `planner-note ${tone}`.trim();
+        setNote(status, '', null);
+        if (motion) gsap.fromTo(dateEl, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.6, ease: 'expo.out' });
+      }
+
+      const showMonth = (d) => { view = new Date(d.getFullYear(), d.getMonth(), 1); render(); };
+      prevMonth.addEventListener('click', () => { showMonth(new Date(view.getFullYear(), view.getMonth() - 1, 1)); });
+      nextMonth.addEventListener('click', () => { showMonth(new Date(view.getFullYear(), view.getMonth() + 1, 1)); });
+      grid.addEventListener('click', (e) => {
+        const btn = e.target.closest('button.cal-day');
+        if (btn && !btn.disabled) select(btn.dataset.date);
+      });
+      grid.addEventListener('keydown', (e) => {
+        const steps = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 };
+        const btn = e.target.closest('button.cal-day');
+        if (!btn || !(e.key in steps)) return;
+        e.preventDefault();
+        const next = addDays(parse(btn.dataset.date), steps[e.key]);
+        const key = toInput(next);
+        if (key < todayKey || monthsFrom(next) > MONTHS_AHEAD) return;
+        focusKey = key;
+        if (next.getMonth() !== view.getMonth() || next.getFullYear() !== view.getFullYear()) showMonth(next);
+        $$('button.cal-day', grid).forEach((b) => { b.tabIndex = -1; });
+        const target = $(`[data-date="${key}"]`, grid);
+        if (target && !target.disabled) { target.tabIndex = 0; target.focus(); }
+      });
+
+      const syncGuests = () => {
+        guestsOut.textContent = `About ${guests.value}`;
+        guests.style.setProperty('--fill', `${((guests.value - guests.min) / (guests.max - guests.min)) * 100}%`);
+      };
+      guests.addEventListener('input', syncGuests);
+      syncGuests();
+
+      const choice = (name) => form.querySelector(`input[name="${name}"]:checked`).value;
+      const needDate = () => {
+        if (selected) return false;
+        setNote(status, 'Please choose a date on the calendar first.', 'error');
+        const tab = $('button.cal-day[tabindex="0"]', grid);
+        if (tab) tab.focus();
+        return true;
+      };
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (needDate()) return;
+        openWhatsApp(
+          `Hello The Pharo (event planner), I'd like to check availability.\n` +
+          `Date: ${weekday(parse(selected))} ${longDate(parse(selected))}\nOccasion: ${choice('occasion')}\n` +
+          `Time of day: ${choice('session')}\nVenue: ${choice('venue')}\nGuests: about ${guests.value}`
+        );
+        setNote(status, `Opening WhatsApp… If nothing happens, call ${PHONE}.`, 'success');
+      });
+
+      // Carry the plan into the full enquiry form below
+      $('[data-planner-continue]', form).addEventListener('click', () => {
+        if (needDate()) return;
+        const enquiry = $('#enquire form');
+        if (!enquiry) return;
+        const set = (name, value) => { const f = enquiry.elements[name]; if (f) f.value = value; };
+        const n = Number(guests.value);
+        set('date', selected);
+        set('type', choice('occasion'));
+        set('venue', choice('venue'));
+        set('guests', n <= 50 ? 'Up to 50' : n <= 150 ? '50–150' : n <= 250 ? '150–250' : '250–350');
+        const msg = enquiry.elements.message;
+        if (msg && !/^Time of day:/m.test(msg.value)) msg.value = `Time of day: ${choice('session')}\n${msg.value}`.trim();
+        setNote(status, 'Added to the enquiry form below.', 'success');
+        scrollToHash('#enquire');
+        setTimeout(() => enquiry.elements.name.focus({ preventScroll: true }), 900);
+      });
+
+      // Occasion tiles above the planner pre-select the occasion
+      $$('[data-occasion]').forEach((tile) => tile.addEventListener('click', () => {
+        const radio = form.querySelector(`input[name="occasion"][value="${tile.dataset.occasion}"]`);
+        if (radio) radio.checked = true;
+      }));
+
+      render();
+    }
+
+    /* ------------------------------------------------------------------
        Without GSAP (or with reduced motion): static page, simple fallbacks
        ------------------------------------------------------------------ */
     if (!motion) {
@@ -506,6 +736,11 @@
         tl.from('.crumbs, .page-hero .eyebrow', { opacity: 0, y: 20, duration: 1, ease: 'expo.out', stagger: 0.1 }, 0.35)
           .from('.page-lead', { opacity: 0, y: 30, duration: 1.2, ease: 'expo.out' }, 0.7)
           .from('.page-hero-glyph', { opacity: 0, y: 60, duration: 2, ease: 'expo.out' }, 0.4);
+      } else if ($('.menu-room')) {
+        tl.from('.menu-room-head > *', { opacity: 0, y: 30, duration: 1.2, ease: 'expo.out', stagger: 0.1 }, 0.2)
+          .from('.fb-chapters', { opacity: 0, y: 20, duration: 1, ease: 'expo.out' }, 0.45)
+          .from('.fb-stage', { opacity: 0, y: 60, scale: 0.96, duration: 1.6, ease: 'expo.out' }, 0.5)
+          .from('.fb-controls', { opacity: 0, duration: 1 }, 1);
       }
       tl.from('.header-inner', { opacity: 0, y: -30, duration: 1.2, ease: 'expo.out' }, 0.6)
         .from('.topbar', { opacity: 0, duration: 1 }, 0.8)
@@ -684,7 +919,7 @@
       '.room-copy > :not(.h2)', '.venue-row-copy > :not(.h2)', '.cuisine', '.menu-cta-card', '.highlight', '.ballroom-card',
       '.occasion', '.steps li', '.enquiry', '.exp-card > :not(.h2)', '.place', '.value', '.group-list li', '.story-copy > :not(.h2)',
       '.story-logo', '.c-card', '.contact-list li', '.map', '.faq details', '.rating', '.f-arch', '.f-reserve-copy > :not(.footer-cta-title)',
-      '.f-brand > *', '.f-col', '.laurel', '.f-group',
+      '.f-brand > *', '.f-col', '.laurel', '.f-group', '.cal', '.planner-panel',
       '.finale-copy .eyebrow', '.finale-copy .btn', '.finale-crown', '.filters', '.cta-band-inner > div:first-child > :not(.h2)',
       '.enquire-grid > div > :not(.h2):not(.enquire-media)', '.faq-grid > div > :not(.h2)',
     ].join(','));
