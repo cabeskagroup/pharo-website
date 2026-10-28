@@ -478,6 +478,12 @@
         let active = null;
         chips.forEach((c) => { if (Number(c.dataset.fbGoto) <= lastShown) active = c; });
         chips.forEach((c) => c.classList.toggle('is-active', c === active));
+        // On phones the chips scroll sideways: keep the active one in view
+        const row = active && active.parentElement;
+        if (row && row.scrollWidth > row.clientWidth) {
+          const offset = active.getBoundingClientRect().left - row.getBoundingClientRect().left;
+          row.scrollBy({ left: offset - (row.clientWidth - active.offsetWidth) / 2, behavior: reduceMotion ? 'auto' : 'smooth' });
+        }
       };
       let refreshTimer = 0;
       const refreshLayout = () => {
